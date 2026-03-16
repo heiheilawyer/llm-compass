@@ -1,134 +1,134 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0056)file:///C:/Users/hongbo.hei/Downloads/llm-compass_1.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LLM Compass — 海外LLM项目匹配器</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./LLM Compass — 海外LLM项目匹配器_files/css2" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:#f7f5f0;color:#1a1916;min-height:100vh;display:flex;justify-content:center;}
-.app{padding:1.5rem 1.1rem 4rem;width:100%;max-width:680px;margin:0 auto;}
+body{font-family:'DM Sans',sans-serif;background:#f7f5f0;color:#1a1916;min-height:100vh;display:flex;justify-content:center;font-size:16px;}
+.app{padding:1.5rem 1.1rem 4rem;width:100%;max-width:760px;margin:0 auto;font-size:16px;}
 .inner{max-width:600px;margin:0 auto;}
-/* ── FONT BAR BOTTOM ── */
-.font-bar-fixed{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #e0ddd6;padding:8px 16px;display:flex;align-items:center;gap:10px;z-index:999;box-shadow:0 -2px 12px rgba(0,0,0,.06);}
-.font-bar-label{font-size:11px;color:#9a9588;flex-shrink:0;}
-.font-btn{width:28px;height:28px;border:1.5px solid #e0ddd6;border-radius:6px;background:#f7f5f0;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;color:#4a3e2e;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;font-size:12px;}
+/* ── FONT WIDGET BOTTOM RIGHT ── */
+.font-widget{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:1.5px solid #e0ddd6;border-radius:12px;padding:10px 8px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.font-widget-label{font-size:18px;color:#9a9588;letter-spacing:.05em;text-transform:uppercase;}
+.font-btn{width:32px;height:32px;border:1.5px solid #e0ddd6;border-radius:7px;background:#f7f5f0;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;color:#4a3e2e;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:28px;line-height:1;}
 .font-btn:hover{border-color:#7c6f5a;background:#f0ece3;}
-.font-slider{flex:1;-webkit-appearance:none;height:3px;background:linear-gradient(to right,#7c6f5a var(--fpct,38%),#e0ddd6 var(--fpct,38%));border-radius:2px;outline:none;cursor:pointer;max-width:200px;}
-.font-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:#7c6f5a;border-radius:50%;cursor:pointer;border:2px solid #f7f5f0;box-shadow:0 0 0 1.5px #7c6f5a;}
-.font-size-label{font-size:11px;color:#7c6f5a;font-weight:500;width:32px;text-align:left;flex-shrink:0;}
-body{padding-bottom:52px;}
-.tnav-btn{flex:1;padding:10px 6px;border:2px solid #e0ddd6;border-radius:8px;background:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:#6a6458;cursor:pointer;text-align:center;transition:all .15s;}
+.font-slider{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;width:28px;height:90px;background:transparent;outline:none;cursor:pointer;padding:0;}
+.font-slider::-webkit-slider-runnable-track{width:3px;background:linear-gradient(to top,#7c6f5a var(--fpct,50%),#e0ddd6 var(--fpct,50%));border-radius:2px;}
+.font-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:#7c6f5a;border-radius:50%;cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1.5px #7c6f5a;margin-left:-7px;}
+.font-size-val{font-size:24px;color:#7c6f5a;font-weight:600;}
+.tnav-btn{flex:1;padding:10px 6px;border:2px solid #e0ddd6;border-radius:8px;background:#fff;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:#6a6458;cursor:pointer;text-align:center;transition:all .15s;}
 .tnav-btn.on{border-color:#7c6f5a;background:#f0ece3;color:#1a1916;}
 .tier-guide{display:none;}.tier-guide.on{display:block;}
-.tg-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:3px;}
-.tg-sub{font-size:12px;color:#9a9588;margin-bottom:1.1rem;}
+.tg-title{font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:3px;}
+.tg-sub{font-size:16px;color:#9a9588;margin-bottom:1.1rem;}
 .ctabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.1rem;}
-.ctab{font-size:11px;padding:5px 11px;border-radius:99px;border:1.5px solid #e0ddd6;background:#fff;color:#6a6458;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.ctab{font-size:24px;padding:5px 11px;border-radius:99px;border:1.5px solid #e0ddd6;background:#fff;color:#6a6458;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
 .ctab.on{background:#f0ece3;border-color:#7c6f5a;color:#1a1916;font-weight:500;}
 .country-panel{display:none;}.country-panel.on{display:block;}
 .tier-card{background:#fff;border:2px solid #e0ddd6;border-radius:10px;overflow:hidden;margin-bottom:9px;}
 .tier-head{padding:11px 13px 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.tier-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;flex-shrink:0;}
+.tier-badge{font-size:18px;font-weight:700;padding:3px 9px;border-radius:99px;flex-shrink:0;}
 .tb1{background:#1a1916;color:#f7f5f0;}.tb2{background:#4a3e2e;color:#f7f5f0;}.tb3{background:#7c6f5a;color:#fff;}.tb4{background:#b8b0a0;color:#fff;}
-.tier-label{font-family:'DM Serif Display',serif;font-size:14px;flex:1;}
-.tier-reach{font-size:10px;color:#9a9588;text-align:right;}
+.tier-label{font-family:'DM Serif Display',serif;font-size:18px;flex:1;}
+.tier-reach{font-size:18px;color:#9a9588;text-align:right;}
 .tier-schools{padding:0 13px 10px;display:flex;flex-wrap:wrap;gap:5px;}
-.stag{font-size:10px;padding:2px 8px;border-radius:99px;border:1.5px solid #c8b898;color:#4a3e2e;background:#fdf8f0;}
-.tier-note{padding:0 13px 10px;font-size:11px;color:#6a6458;line-height:1.6;border-top:1px solid #f0ede6;padding-top:8px;}
+.stag{font-size:18px;padding:2px 8px;border-radius:99px;border:1.5px solid #c8b898;color:#4a3e2e;background:#fdf8f0;}
+.tier-note{padding:0 13px 10px;font-size:24px;color:#6a6458;line-height:1.6;border-top:1px solid #f0ede6;padding-top:8px;}
 .matcher{display:none;}.matcher.on{display:block;}
 .prog-wrap{margin-bottom:1.3rem;}
-.prog-label{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9a9588;margin-bottom:6px;}
+.prog-label{display:flex;justify-content:space-between;font-size:18px;letter-spacing:.1em;text-transform:uppercase;color:#9a9588;margin-bottom:6px;}
 .prog-track{height:3px;background:#e0ddd6;border-radius:2px;}
 .prog-fill{height:100%;background:#7c6f5a;border-radius:2px;transition:width .5s ease;}
-.step-num{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9a9588;margin-bottom:5px;}
-.step-q{font-family:'DM Serif Display',serif;font-size:clamp(17px,4vw,24px);line-height:1.25;margin-bottom:4px;}
+.step-num{font-size:18px;letter-spacing:.12em;text-transform:uppercase;color:#9a9588;margin-bottom:5px;}
+.step-q{font-family:'DM Serif Display',serif;font-size:clamp(22px,5vw,32px);line-height:1.25;margin-bottom:4px;}
 .step-q em{font-style:italic;color:#7c6f5a;}
-.step-hint{font-size:12px;color:#9a9588;margin-bottom:1.1rem;line-height:1.5;}
+.step-hint{font-size:16px;color:#9a9588;margin-bottom:1.1rem;line-height:1.5;}
 .options{display:flex;flex-direction:column;gap:6px;margin-bottom:1.1rem;}
 .opt{display:flex;align-items:center;gap:11px;padding:11px 13px;border:2px solid #e0ddd6;border-radius:10px;cursor:pointer;background:#fff;text-align:left;width:100%;color:inherit;transition:all .15s;position:relative;}
 .opt:hover{border-color:#b8b0a0;}.opt.sel{border-color:#7c6f5a;background:#f0ece3;box-shadow:0 0 0 3px #7c6f5a22;}
-.opt.sel::after{content:'✓';position:absolute;right:11px;top:50%;transform:translateY(-50%);width:19px;height:19px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:9px;font-weight:700;line-height:19px;text-align:center;}
-.opt-icon{font-size:17px;flex-shrink:0;width:24px;text-align:center;}
+.opt.sel::after{content:'✓';position:absolute;right:11px;top:50%;transform:translateY(-50%);width:19px;height:19px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:13px;font-weight:700;line-height:19px;text-align:center;}
+.opt-icon{font-size:28px;flex-shrink:0;width:24px;text-align:center;}
 .opt-text{flex:1;padding-right:22px;}
-.opt-main{font-size:13px;font-weight:500;display:block;line-height:1.3;}
-.opt-sub{font-size:11px;color:#9a9588;margin-top:1px;display:block;}
+.opt-main{font-size:28px;font-weight:500;display:block;line-height:1.3;}
+.opt-sub{font-size:24px;color:#9a9588;margin-top:1px;display:block;}
 .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:1.1rem;}
-.opt-pill{padding:9px 11px;border:2px solid #e0ddd6;border-radius:8px;cursor:pointer;font-size:12px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;}
+.opt-pill{padding:9px 11px;border:2px solid #e0ddd6;border-radius:8px;cursor:pointer;font-size:16px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;}
 .opt-pill:hover{border-color:#b8b0a0;}.opt-pill.sel{border-color:#7c6f5a;color:#1a1916;background:#f0ece3;font-weight:500;}
-.opt-pill.sel::after{content:'✓';position:absolute;right:7px;top:7px;width:15px;height:15px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:8px;font-weight:700;line-height:15px;text-align:center;}
-.opt-pill-en{display:block;font-size:10px;color:#b8b0a0;margin-top:1px;}
+.opt-pill.sel::after{content:'✓';position:absolute;right:7px;top:7px;width:15px;height:15px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:12px;font-weight:700;line-height:15px;text-align:center;}
+.opt-pill-en{display:block;font-size:18px;color:#b8b0a0;margin-top:1px;}
 .wcard{background:#fff;border:2px solid #e0ddd6;border-radius:11px;padding:14px;margin-bottom:1.1rem;}
 .wsec{margin-bottom:12px;}
-.wlbl{font-size:10px;font-weight:500;color:#9a9588;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;display:block;}
+.wlbl{font-size:18px;font-weight:500;color:#9a9588;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;display:block;}
 .yrs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
-.yr-pill{padding:9px 5px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:11px;font-weight:500;color:#6a6458;background:#fff;text-align:center;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;}
+.yr-pill{padding:9px 5px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:24px;font-weight:500;color:#6a6458;background:#fff;text-align:center;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;}
 .yr-pill:hover{border-color:#b8b0a0;}.yr-pill.sel{border-color:#7c6f5a;color:#1a1916;background:#f0ece3;}
 .ind-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
-.ind-pill{padding:8px 10px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:11px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;line-height:1.3;}
+.ind-pill{padding:8px 10px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:24px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;line-height:1.3;}
 .ind-pill:hover{border-color:#b8b0a0;}.ind-pill.sel{border-color:#7c6f5a;color:#1a1916;background:#f0ece3;font-weight:500;}
 .ind-pill.sel::after{content:'✓';position:absolute;right:6px;top:6px;width:13px;height:13px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:7px;font-weight:700;line-height:13px;text-align:center;}
-.work-insight{background:#f0ece3;border:1.5px solid #c8b898;border-radius:8px;padding:9px 12px;margin-bottom:1.1rem;font-size:12px;color:#4a3e2e;line-height:1.6;}
-.wi-title{font-weight:500;font-size:10px;color:#7c6058;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
-.ws-tag{display:inline-block;font-size:10px;background:#fff;color:#4a3e2e;border-radius:99px;padding:2px 8px;margin:2px 2px 2px 0;border:1px solid #c8b898;}
+.work-insight{background:#f0ece3;border:1.5px solid #c8b898;border-radius:8px;padding:9px 12px;margin-bottom:1.1rem;font-size:16px;color:#4a3e2e;line-height:1.6;}
+.wi-title{font-weight:500;font-size:18px;color:#7c6058;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.ws-tag{display:inline-block;font-size:18px;background:#fff;color:#4a3e2e;border-radius:99px;padding:2px 8px;margin:2px 2px 2px 0;border:1px solid #c8b898;}
 .spec-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:1.1rem;}
-.spec-pill{padding:8px 9px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:11px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;line-height:1.3;}
+.spec-pill{padding:8px 9px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:24px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;line-height:1.3;}
 .spec-pill:hover{border-color:#b8b0a0;}.spec-pill.sel{border-color:#7c6f5a;color:#1a1916;background:#f0ece3;font-weight:500;}
 .spec-pill.sel::after{content:'✓';position:absolute;right:5px;top:5px;width:13px;height:13px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:7px;font-weight:700;line-height:13px;text-align:center;}
-.spec-pill-en{display:block;font-size:9px;color:#b8b0a0;margin-top:1px;}
-.spec-new{font-size:8px;background:#e8f4e8;color:#2a6a2a;border-radius:3px;padding:1px 3px;margin-left:2px;vertical-align:middle;}
+.spec-pill-en{display:block;font-size:13px;color:#b8b0a0;margin-top:1px;}
+.spec-new{font-size:12px;background:#e8f4e8;color:#2a6a2a;border-radius:3px;padding:1px 3px;margin-left:2px;vertical-align:middle;}
 .spec-hint-box{background:#fff;border:1.5px solid #c8b898;border-radius:8px;padding:9px 12px;margin-bottom:1.1rem;}
-.sht{font-size:10px;font-weight:500;color:#9a9588;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
-.sh-tag{display:inline-block;font-size:10px;background:#f0ece3;color:#4a3e2e;border-radius:99px;padding:2px 8px;margin:2px 2px 2px 0;}
+.sht{font-size:18px;font-weight:500;color:#9a9588;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.sh-tag{display:inline-block;font-size:18px;background:#f0ece3;color:#4a3e2e;border-radius:99px;padding:2px 8px;margin:2px 2px 2px 0;}
 .slider-wrap{margin-bottom:1.1rem;}
-.budget-val{font-family:'DM Serif Display',serif;font-size:26px;color:#7c6f5a;margin-bottom:7px;}
-.budget-usd{font-size:11px;color:#b8b0a0;margin-bottom:9px;}
+.budget-val{font-family:'DM Serif Display',serif;font-size:34px;color:#7c6f5a;margin-bottom:7px;}
+.budget-usd{font-size:24px;color:#b8b0a0;margin-bottom:9px;}
 input[type=range].custom{-webkit-appearance:none;width:100%;height:3px;background:linear-gradient(to right,#7c6f5a var(--pct,40%),#e0ddd6 var(--pct,40%));border-radius:2px;outline:none;cursor:pointer;}
 input[type=range].custom::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;background:#7c6f5a;border-radius:50%;cursor:pointer;border:3px solid #f7f5f0;box-shadow:0 0 0 2px #7c6f5a;}
-.slider-labels{display:flex;justify-content:space-between;font-size:10px;color:#b8b0a0;margin-top:5px;}
-.school-search{width:100%;background:#fff;border:2px solid #e0ddd6;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1a1916;outline:none;margin-bottom:8px;}
+.slider-labels{display:flex;justify-content:space-between;font-size:18px;color:#b8b0a0;margin-top:5px;}
+.school-search{width:100%;background:#fff;border:2px solid #e0ddd6;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:28px;color:#1a1916;outline:none;margin-bottom:8px;}
 .school-search:focus{border-color:#7c6f5a;}
 .school-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:1.1rem;max-height:260px;overflow-y:auto;}
-.school-pill{padding:8px 10px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:11px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;}
+.school-pill{padding:8px 10px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:24px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;}
 .school-pill:hover{border-color:#b8b0a0;}.school-pill.sel{border-color:#7c6f5a;color:#1a1916;background:#f0ece3;font-weight:500;}
 .school-pill.sel::after{content:'✓';position:absolute;right:7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:7px;font-weight:700;line-height:14px;text-align:center;}
-.school-tier-label{font-size:9px;color:#b8b0a0;display:block;margin-top:1px;}
+.school-tier-label{font-size:13px;color:#b8b0a0;display:block;margin-top:1px;}
 .lang-wrap{background:#fff;border:2px solid #e0ddd6;border-radius:11px;padding:13px;margin-bottom:1.1rem;}
 .lang-tabs{display:flex;gap:6px;margin-bottom:11px;}
-.lang-tab{flex:1;padding:8px;border:2px solid #e0ddd6;border-radius:7px;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:#6a6458;transition:all .15s;text-align:center;}
+.lang-tab{flex:1;padding:8px;border:2px solid #e0ddd6;border-radius:7px;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:24px;font-weight:500;color:#6a6458;transition:all .15s;text-align:center;}
 .lang-tab.sel{border-color:#7c6f5a;background:#f0ece3;color:#4a3e2e;}
-.score-val{font-family:'DM Serif Display',serif;font-size:24px;color:#7c6f5a;margin-bottom:8px;}
-.score-range-labels{display:flex;justify-content:space-between;font-size:10px;color:#b8b0a0;margin-top:5px;}
+.score-val{font-family:'DM Serif Display',serif;font-size:32px;color:#7c6f5a;margin-bottom:8px;}
+.score-range-labels{display:flex;justify-content:space-between;font-size:18px;color:#b8b0a0;margin-top:5px;}
 .lang-elig{margin-top:10px;padding:8px 11px;background:#f7f5f0;border-radius:7px;}
-.lang-elig-title{font-weight:500;font-size:11px;margin-bottom:4px;}
+.lang-elig-title{font-weight:500;font-size:24px;margin-bottom:4px;}
 .elig-row{display:flex;justify-content:space-between;margin-bottom:2px;}
-.es{font-size:10px;color:#6a6458;}.eg{font-size:10px;color:#4a7030;}.ew{font-size:10px;color:#904820;}.en{font-size:10px;color:#b8b0a0;}
-.toefl-note{font-size:10px;color:#904820;background:#fdf0e4;border:1px solid #e0c0a0;border-radius:5px;padding:5px 9px;margin-top:7px;}
+.es{font-size:18px;color:#6a6458;}.eg{font-size:18px;color:#4a7030;}.ew{font-size:18px;color:#904820;}.en{font-size:18px;color:#b8b0a0;}
+.toefl-note{font-size:18px;color:#904820;background:#fdf0e4;border:1px solid #e0c0a0;border-radius:5px;padding:5px 9px;margin-top:7px;}
 .nav{display:flex;gap:9px;align-items:center;margin-top:1.1rem;}
-.btn-next{padding:12px 24px;background:#1a1916;color:#f7f5f0;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:opacity .2s;}
+.btn-next{padding:12px 24px;background:#1a1916;color:#f7f5f0;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:28px;font-weight:500;cursor:pointer;transition:opacity .2s;}
 .btn-next:hover{opacity:.82;}.btn-next:disabled{opacity:.25;cursor:default;}
-.btn-back{display:flex;align-items:center;gap:5px;padding:12px 14px;background:#fff;color:#1a1916;border:2px solid #c8c4bc;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.btn-back{display:flex;align-items:center;gap:5px;padding:12px 14px;background:#fff;color:#1a1916;border:2px solid #c8c4bc;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:28px;font-weight:500;cursor:pointer;transition:all .15s;}
 .btn-back:hover{border-color:#7c6f5a;background:#f0ece3;}
 .bc{display:flex;flex-wrap:wrap;align-items:center;margin-bottom:1.1rem;}
 .edit-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:1rem;}
-.edit-chip{display:flex;align-items:center;gap:3px;font-size:10px;padding:3px 9px 3px 7px;border:1.5px solid #d0ccc4;border-radius:99px;color:#6a6458;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.edit-chip{display:flex;align-items:center;gap:3px;font-size:18px;padding:3px 9px 3px 7px;border:1.5px solid #d0ccc4;border-radius:99px;color:#6a6458;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
 .edit-chip:hover{border-color:#7c6f5a;color:#4a3e2e;background:#f0ece3;}
 .edit-chip-dot{width:4px;height:4px;border-radius:50%;background:#7c6f5a;flex-shrink:0;}
-.results-meta{font-size:11px;color:#9a9588;margin-bottom:.9rem;line-height:1.6;}
+.results-meta{font-size:24px;color:#9a9588;margin-bottom:.9rem;line-height:1.6;}
 .result-card{border:2px solid #e0ddd6;border-radius:11px;overflow:hidden;margin-bottom:8px;background:#fff;}
 .result-card.top{border-color:#7c6f5a;}
 .rc-head{padding:13px 15px 8px;display:flex;align-items:flex-start;justify-content:space-between;gap:9px;}
-.rc-rank{font-size:10px;color:#9a9588;letter-spacing:.07em;text-transform:uppercase;}
-.rc-name{font-family:'DM Serif Display',serif;font-size:15px;margin:2px 0 1px;}
-.rc-prog{font-size:10px;color:#7c6f5a;font-style:italic;margin-bottom:1px;}
-.rc-country{font-size:10px;color:#9a9588;}
-.rc-score{font-family:'DM Serif Display',serif;font-size:21px;color:#7c6f5a;text-align:right;}
-.rc-score-label{font-size:9px;color:#b8b0a0;text-transform:uppercase;letter-spacing:.04em;text-align:right;}
+.rc-rank{font-size:18px;color:#9a9588;letter-spacing:.07em;text-transform:uppercase;}
+.rc-name{font-family:'DM Serif Display',serif;font-size:24px;margin:2px 0 1px;}
+.rc-prog{font-size:18px;color:#7c6f5a;font-style:italic;margin-bottom:1px;}
+.rc-country{font-size:18px;color:#9a9588;}
+.rc-score{font-family:'DM Serif Display',serif;font-size:28px;color:#7c6f5a;text-align:right;}
+.rc-score-label{font-size:13px;color:#b8b0a0;text-transform:uppercase;letter-spacing:.04em;text-align:right;}
 .rc-body{padding:0 15px 11px;}
 .rc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;}
-.rc-tag{font-size:10px;padding:2px 7px;border-radius:99px;border:1px solid #e0ddd6;color:#9a9588;background:#f7f5f0;}
+.rc-tag{font-size:18px;padding:2px 7px;border-radius:99px;border:1px solid #e0ddd6;color:#9a9588;background:#f7f5f0;}
 .rc-tag.good{border-color:#b8c8a8;color:#4a7030;background:#f0f5ea;}
 .rc-tag.warn{border-color:#e0c0a0;color:#904820;background:#fdf0e4;}
 .rc-tag.info{border-color:#b8d4f0;color:#1858a0;background:#eef4fc;}
@@ -136,37 +136,37 @@ input[type=range].custom::-webkit-slider-thumb{-webkit-appearance:none;width:19p
 .rc-tag.sm{border-color:#c8b89850;color:#5a4828;background:#fdf5ec;}
 .rc-tag.wp{border-color:#d4b8f050;color:#5818a0;background:#f4eeff;}
 .rc-tag.bar-extra{border-color:#b8d4b850;color:#2a6a2a;background:#eefaee;}
-.bar-note-box{font-size:10px;color:#2a6a2a;background:#eefaee;border:1px solid #b8d4b8;border-radius:5px;padding:5px 9px;margin-bottom:7px;}
-.rc-insight{font-size:11px;color:#6a6458;line-height:1.6;border-top:1px solid #f0ede6;padding-top:7px;margin-bottom:8px;}
+.bar-note-box{font-size:18px;color:#2a6a2a;background:#eefaee;border:1px solid #b8d4b8;border-radius:5px;padding:5px 9px;margin-bottom:7px;}
+.rc-insight{font-size:24px;color:#6a6458;line-height:1.6;border-top:1px solid #f0ede6;padding-top:7px;margin-bottom:8px;}
 .rc-fb{display:flex;align-items:center;gap:6px;border-top:1px solid #f0ede6;padding-top:7px;flex-wrap:wrap;}
-.rc-fb-label{font-size:10px;color:#b8b0a0;}
-.thumb-btn{background:#f7f5f0;border:1.5px solid #e0ddd6;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:11px;color:#6a6458;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.rc-fb-label{font-size:18px;color:#b8b0a0;}
+.thumb-btn{background:#f7f5f0;border:1.5px solid #e0ddd6;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:24px;color:#6a6458;font-family:'DM Sans',sans-serif;transition:all .15s;}
 .thumb-btn.up.active{border-color:#7c9a60;color:#4a7030;background:#f0f5ea;}
 .thumb-btn.down.active{border-color:#c09060;color:#904820;background:#fdf0e4;}
-.flag-btn{background:none;border:none;cursor:pointer;font-size:10px;color:#c8c4bc;margin-left:auto;padding:3px 4px;font-family:'DM Sans',sans-serif;transition:color .15s;}
+.flag-btn{background:none;border:none;cursor:pointer;font-size:18px;color:#c8c4bc;margin-left:auto;padding:3px 4px;font-family:'DM Sans',sans-serif;transition:color .15s;}
 .flag-btn:hover{color:#904820;}
-.fp-field{width:100%;background:#f7f5f0;border:1.5px solid #e0ddd6;border-radius:7px;color:#1a1916;font-family:'DM Sans',sans-serif;font-size:11px;padding:8px 10px;resize:none;outline:none;line-height:1.6;margin-bottom:5px;}
+.fp-field{width:100%;background:#f7f5f0;border:1.5px solid #e0ddd6;border-radius:7px;color:#1a1916;font-family:'DM Sans',sans-serif;font-size:24px;padding:8px 10px;resize:none;outline:none;line-height:1.6;margin-bottom:5px;}
 .fp-field:focus{border-color:#7c6f5a;}.fp-field::placeholder{color:#c8c4bc;}
-.btn-flag-sub{padding:5px 11px;background:#1a1916;color:#f7f5f0;border:none;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;cursor:pointer;}
-.btn-flag-can{padding:5px 9px;background:transparent;color:#9a9588;border:1.5px solid #e0ddd6;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:10px;cursor:pointer;margin-left:4px;}
-.flag-sent-msg{font-size:11px;color:#4a7030;}
+.btn-flag-sub{padding:5px 11px;background:#1a1916;color:#f7f5f0;border:none;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:18px;font-weight:500;cursor:pointer;}
+.btn-flag-can{padding:5px 9px;background:transparent;color:#9a9588;border:1.5px solid #e0ddd6;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:18px;cursor:pointer;margin-left:4px;}
+.flag-sent-msg{font-size:24px;color:#4a7030;}
 .fb-panel{border:2px solid #e0ddd6;border-radius:11px;padding:14px;margin-top:1.1rem;background:#fff;}
-.fp-title{font-family:'DM Serif Display',serif;font-size:17px;margin-bottom:2px;}
-.fp-sub{font-size:11px;color:#9a9588;margin-bottom:.9rem;}
+.fp-title{font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:2px;}
+.fp-sub{font-size:24px;color:#9a9588;margin-bottom:.9rem;}
 .fp-tabs{display:flex;gap:5px;margin-bottom:.8rem;flex-wrap:wrap;}
-.fp-tab{font-size:10px;padding:3px 10px;border-radius:99px;border:1.5px solid #e0ddd6;background:transparent;color:#6a6458;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.fp-tab{font-size:18px;padding:3px 10px;border-radius:99px;border:1.5px solid #e0ddd6;background:transparent;color:#6a6458;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
 .fp-tab.on{background:#f0ece3;border-color:#7c6f5a;color:#4a3e2e;font-weight:500;}
 .fp-star-row{display:flex;gap:4px;margin-bottom:.8rem;}
-.star{font-size:20px;cursor:pointer;color:#e0ddd6;user-select:none;transition:color .1s;}
+.star{font-size:24px;cursor:pointer;color:#e0ddd6;user-select:none;transition:color .1s;}
 .star.on{color:#c8a840;}
 .fp-row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
-.fp-anon{font-size:10px;color:#9a9588;display:flex;align-items:center;gap:4px;}
+.fp-anon{font-size:18px;color:#9a9588;display:flex;align-items:center;gap:4px;}
 .fp-anon input{accent-color:#7c6f5a;cursor:pointer;}
 .fp-sent{text-align:center;padding:1.5rem 0;}
 .fp-sent-icon{font-size:30px;margin-bottom:6px;}
-.fp-sent-title{font-family:'DM Serif Display',serif;font-size:17px;color:#4a7030;margin-bottom:3px;}
-.fp-sent-sub{font-size:11px;color:#9a9588;}
-.sending-indicator{font-size:10px;color:#9a9588;margin-left:8px;}
+.fp-sent-title{font-family:'DM Serif Display',serif;font-size:28px;color:#4a7030;margin-bottom:3px;}
+.fp-sent-sub{font-size:24px;color:#9a9588;}
+.sending-indicator{font-size:18px;color:#9a9588;margin-left:8px;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 .fade{animation:fadeUp .28s ease both;}
 .d1{animation-delay:.05s}.d2{animation-delay:.1s}
@@ -175,24 +175,24 @@ input[type=range].custom::-webkit-slider-thumb{-webkit-appearance:none;width:19p
 <body>
 <div class="app"><div class="inner">
 <div class="top-nav fade">
-  <button class="tnav-btn on" id="btn-m" onclick="sv('matcher')">🔍 Matcher 匹配器</button>
-  <button class="tnav-btn" id="btn-t" onclick="sv('tiers')">🏫 院校排名指南</button>
+  <button class="tnav-btn on" id="btn-m" onclick="sv(&#39;matcher&#39;)">🔍 Matcher 匹配器</button>
+  <button class="tnav-btn" id="btn-t" onclick="sv(&#39;tiers&#39;)">🏫 院校排名指南</button>
 </div>
 <div class="tier-guide" id="view-tiers">
   <div class="tg-title fade">全球法学院排名指南</div>
   <div class="tg-sub fade">基于2025年最新排名 · 点击国家切换</div>
-  <div class="ctabs fade" id="ctabs"></div>
-  <div id="cpanels"></div>
+  <div class="ctabs fade" id="ctabs"><button class="ctab on">🇨🇳 中国</button><button class="ctab">🇺🇸 美国</button><button class="ctab">🇬🇧 英国</button><button class="ctab">🇭🇰 香港</button><button class="ctab">🇸🇬 新加坡</button><button class="ctab">🇦🇺 澳大利亚</button><button class="ctab">🇨🇦 加拿大</button></div>
+  <div id="cpanels"><div class="country-panel on" id="cp-cn"><div style="font-size:10px;color:#b8b0a0;margin-bottom:8px">数据来源：软科2025</div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb1">第一档 T1</span><span class="tier-label">第一档 T1</span><span class="tier-reach">哈佛/耶鲁可冲</span></div><div class="tier-schools"><span class="stag">1.中国政法</span><span class="stag">2.人大</span><span class="stag">3.武汉大学</span><span class="stag">4.北京大学</span><span class="stag">5.华东政法</span></div><div class="tier-note">软科前5。中政A+。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb2">第二档 T2</span><span class="tier-label">第二档 T2</span><span class="tier-reach">T6–T14竞争力</span></div><div class="tier-schools"><span class="stag">6.西南政法</span><span class="stag">7.清华</span><span class="stag">8.吉林</span><span class="stag">9.上海交大</span><span class="stag">10.中南财经政法</span><span class="stag">11.复旦</span><span class="stag">12.西北政法</span><span class="stag">13.对外经贸</span></div><div class="tier-note">前13。清华接近T1，SJTU/Fudan外资所认可高。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb3">第三档 T3</span><span class="tier-label">第三档 T3</span><span class="tier-reach">T14–T30·UK/HK/AU</span></div><div class="tier-schools"><span class="stag">14.南京大学</span><span class="stag">15.浙大</span><span class="stag">16.北师大</span><span class="stag">17.厦大</span><span class="stag">18.中山</span><span class="stag">19.山大</span><span class="stag">20.北航</span><span class="stag">21.南开</span><span class="stag">22.华科</span><span class="stag">23.中国海洋</span><span class="stag">24.上海政法</span><span class="stag">25.苏州大学</span></div><div class="tier-note">14–25名。语言和GPA权重更大。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb4">第四档 T4</span><span class="tier-label">第四档 T4</span><span class="tier-reach">经历可弥补</span></div><div class="tier-schools"><span class="stag">25名外各院校</span><span class="stag">省属重点</span><span class="stag">财经类院校</span></div><div class="tier-note">25名外。魔圈/V10实习+工作经验大幅弥补院校劣势。</div></div></div><div class="country-panel" id="cp-us"><div style="font-size:10px;color:#b8b0a0;margin-bottom:8px">数据来源：U.S. News 2025</div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb1">T3 (HYS)</span><span class="tier-label">T3 (HYS)</span><span class="tier-reach">全球品牌</span></div><div class="tier-schools"><span class="stag">Yale #1</span><span class="stag">Stanford #1（科技/IP，偏工作党）</span><span class="stag">Harvard #6（TOEFL only）</span></div><div class="tier-note">Stanford/Yale #1，Harvard #6（仅TOEFL≥100）。Stanford强烈偏好2年+律所/科技经验。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb2">T6</span><span class="tier-label">T6</span><span class="tier-reach">BigLaw·NY Bar</span></div><div class="tier-schools"><span class="stag">U Chicago #3（偏工作党）</span><span class="stag">Columbia #10（公司法）</span><span class="stag">NYU #8（税法/科技）</span></div><div class="tier-note">Columbia公司法#1；NYU税法/科技/娱乐；Chicago竞争法偏工作党。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb3">T14/T17</span><span class="tier-label">T14/T17</span><span class="tier-reach">全美BigLaw·NY Bar</span></div><div class="tier-schools"><span class="stag">Penn #5（金融+沃顿）</span><span class="stag">Michigan #8（偏工作党）</span><span class="stag">UCLA #12（娱乐/IP）</span><span class="stag">Berkeley #13（科技/环境）</span><span class="stag">Georgetown #14（数据隐私）</span></div><div class="tier-note">Penn金融+沃顿偏工作经验；Michigan偏工作党；UCLA娱乐/IP；Berkeley科技/环境；Georgetown数据隐私。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb4">专项强校</span><span class="tier-label">专项强校</span><span class="tier-reach">特定方向首选</span></div><div class="tier-schools"><span class="stag">USC Gould（娱乐/媒体）</span><span class="stag">Cornell Tech（科技创业）</span><span class="stag">Pepperdine（娱乐/体育）</span></div><div class="tier-note">USC娱乐；Cornell Tech科技创业偏技术背景；Pepperdine娱乐/体育。</div></div></div><div class="country-panel" id="cp-uk"><div style="font-size:10px;color:#b8b0a0;margin-bottom:8px">数据来源：QS Law 2025</div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb1">第一档</span><span class="tier-label">第一档</span><span class="tier-reach">全球顶级</span></div><div class="tier-schools"><span class="stag">Oxford BCL/MSt</span><span class="stag">Cambridge LLM</span></div><div class="tier-note">Oxford QS#3（TOEFL 110+），Cambridge QS#5（TOEFL 100+）。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb2">第二档</span><span class="tier-label">第二档</span><span class="tier-reach">魔圈·金融</span></div><div class="tier-schools"><span class="stag">LSE LLM</span><span class="stag">UCL Laws LLM</span></div><div class="tier-note">LSE QS#7（TOEFL 107），UCL QS#10（TOEFL 92，较易录）。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb3">第三档</span><span class="tier-label">第三档</span><span class="tier-reach">科技/仲裁</span></div><div class="tier-schools"><span class="stag">King's IP &amp; Info</span><span class="stag">Edinburgh IT Law</span><span class="stag">QMUL Tech Media</span></div><div class="tier-note">King's QS#18（IP/数据法）；Edinburgh（IT Law，低费）；QMUL（娱乐/科技媒体）。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb4">第四档</span><span class="tier-label">第四档</span><span class="tier-reach">区域认可</span></div><div class="tier-schools"><span class="stag">Nottingham</span><span class="stag">Bristol</span><span class="stag">Manchester</span></div><div class="tier-note">诺丁汉、布里斯托、曼彻斯特等。</div></div></div><div class="country-panel" id="cp-hk"><div style="font-size:10px;color:#b8b0a0;margin-bottom:8px">数据来源：QS Law 2025</div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb1">第一档</span><span class="tier-label">第一档</span><span class="tier-reach">仲裁/回国首选</span></div><div class="tier-schools"><span class="stag">HKU LLM QS#30</span><span class="stag">CUHK AI Law QS#59</span><span class="stag">CityU仲裁QS#42</span></div><div class="tier-note">HKU QS#30（仲裁/国际）；CUHK AI Law；CityU仲裁专项。</div></div></div><div class="country-panel" id="cp-sg"><div style="font-size:10px;color:#b8b0a0;margin-bottom:8px">数据来源：QS Law 2025</div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb1">NUS &amp; SMU</span><span class="tier-label">NUS &amp; SMU</span><span class="tier-reach">亚洲仲裁中心</span></div><div class="tier-schools"><span class="stag">NUS LLM</span><span class="stag">SMU LLM</span></div><div class="tier-note">NUS QS亚洲#1，SIAC仲裁、AI中心CARL；SMU国际商法。</div></div></div><div class="country-panel" id="cp-au"><div style="font-size:10px;color:#b8b0a0;margin-bottom:8px">数据来源：QS Law 2025</div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb1">G8领头</span><span class="tier-label">G8领头</span><span class="tier-reach">亚太·PR友好</span></div><div class="tier-schools"><span class="stag">Melbourne Law</span><span class="stag">Sydney Law</span><span class="stag">ANU Law</span></div><div class="tier-note">Melbourne QS#12（环境法）；Sydney QS#18；ANU QS#20（国际/公法）。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb2">G8其余</span><span class="tier-label">G8其余</span><span class="tier-reach">PR可申</span></div><div class="tier-schools"><span class="stag">UNSW</span><span class="stag">Queensland</span><span class="stag">Monash</span></div><div class="tier-note">UNSW（科技/媒体法），Queensland。</div></div></div><div class="country-panel" id="cp-ca"><div style="font-size:10px;color:#b8b0a0;margin-bottom:8px">数据来源：QS Law 2025</div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb1">第一档</span><span class="tier-label">第一档</span><span class="tier-reach">PR通道强</span></div><div class="tier-schools"><span class="stag">U Toronto LLM</span><span class="stag">McGill LLM</span></div><div class="tier-note">Toronto QS#17，McGill QS#41。PGWP最长3年。</div></div><div class="tier-card"><div class="tier-head"><span class="tier-badge tb2">第二档</span><span class="tier-label">第二档</span><span class="tier-reach">PGWP可申</span></div><div class="tier-schools"><span class="stag">UBC Allard</span><span class="stag">Osgoode Hall</span></div><div class="tier-note">UBC QS#38（环境法），Osgoode（16专项）。</div></div></div></div>
 </div>
-<div class="matcher on" id="view-matcher"><div id="root"></div></div>
+<div class="matcher on" id="view-matcher"><div id="root"><div class="prog-wrap fade"><div class="prog-label"><span>LLM Compass · 34个项目</span><span>第1步/共7步</span></div><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div></div><div class="step-num fade">Goal · 目标方向</div><div class="step-q fade d1">你最希望通过LLM <em>实现什么</em>？</div><div class="step-hint fade d1">答案决定推荐项目、地区和策略。</div><div class="options fade d1"><button class="opt" onclick="pick(&#39;goal&#39;,&#39;bar&#39;)"><span class="opt-icon">⚖️</span><span class="opt-text"><span class="opt-main">Qualify as a lawyer in a US state</span><span class="opt-sub">美国某州律师资格 · 留美发展</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;llm2jd&#39;)"><span class="opt-icon">🎓</span><span class="opt-text"><span class="opt-main">LLM with potential transfer to JD</span><span class="opt-sub">LLM转JD · 长期留美路径</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;china_firm&#39;)"><span class="opt-icon">🏢</span><span class="opt-text"><span class="opt-main">Return to China — law firm</span><span class="opt-sub">回国 · 内所/外资所中国办公室</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;inhouse&#39;)"><span class="opt-icon">💼</span><span class="opt-text"><span class="opt-main">Return to China — in-house legal</span><span class="opt-sub">回国 · 企业法务 · 跨国公司法务部</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;civil&#39;)"><span class="opt-icon">📋</span><span class="opt-text"><span class="opt-main">Return to China — civil service</span><span class="opt-sub">回国考公 · 政府机关 · 涉外单位</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;academic&#39;)"><span class="opt-icon">📚</span><span class="opt-text"><span class="opt-main">Academic / PhD track</span><span class="opt-sub">学术 · SJD/JSD · 英美港新欧博士</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;open&#39;)"><span class="opt-icon">🌐</span><span class="opt-text"><span class="opt-main">Keep all options open</span><span class="opt-sub">方向未定 · 综合考量</span></span></button></div><div class="nav fade d2"><button class="btn-next" disabled="" onclick="nx()">继续 →</button></div></div></div>
 </div></div>
 
-<div class="font-bar-fixed">
-  <span class="font-bar-label">字体</span>
-  <button class="font-btn" onclick="adjFont(-1)">A−</button>
-  <input type="range" class="font-slider" id="font-slider" min="12" max="20" step="1" value="15" style="--fpct:38%" oninput="setFont(this.value)">
+<div class="font-widget">
+  <span class="font-widget-label">字体</span>
   <button class="font-btn" onclick="adjFont(1)">A+</button>
-  <span class="font-size-label" id="font-size-label">15px</span>
+  <input type="range" class="font-slider" id="font-slider" min="12" max="22" step="1" value="16" oninput="setFont(this.value)">
+  <button class="font-btn" onclick="adjFont(-1)">A−</button>
+  <span class="font-size-val" id="font-size-label">16</span>
 </div>
 
 <script>
@@ -516,19 +516,20 @@ function fpSub(){
 }
 
 /* ── FONT SIZE ── */
-let currentFont=15;
+let currentFont=16;
 function setFont(v){
   currentFont=parseInt(v);
+  document.documentElement.style.setProperty('--base-font', currentFont+'px');
   document.querySelector('.app').style.fontSize=currentFont+'px';
-  const pct=Math.round((currentFont-12)/8*100);
   const sl=document.getElementById('font-slider');
   const lb=document.getElementById('font-size-label');
-  if(sl){sl.value=currentFont;sl.style.setProperty('--fpct',pct+'%');}
-  if(lb)lb.textContent=currentFont+'px';
+  if(sl) sl.value=currentFont;
+  if(lb) lb.textContent=currentFont;
 }
-function adjFont(d){setFont(Math.min(20,Math.max(12,currentFont+d)));}
+function adjFont(d){setFont(Math.min(22,Math.max(12,currentFont+d)));}
 
 render();
 </script>
-</body>
-</html>
+
+
+</body></html>
