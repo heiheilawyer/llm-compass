@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Compass — 海外LLM项目匹配器</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#f7f5f0;color:#1a1916;min-height:100vh;}
+.app{padding:1.5rem 1.1rem 4rem;}
+.inner{max-width:600px;margin:0 auto;}
+.top-nav{display:flex;gap:8px;margin-bottom:1.5rem;}
+.tnav-btn{flex:1;padding:10px 6px;border:2px solid #e0ddd6;border-radius:8px;background:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:#6a6458;cursor:pointer;text-align:center;transition:all .15s;}
+.tnav-btn.on{border-color:#7c6f5a;background:#f0ece3;color:#1a1916;}
+.tier-guide{display:none;}.tier-guide.on{display:block;}
+.tg-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:3px;}
+.tg-sub{font-size:12px;color:#9a9588;margin-bottom:1.1rem;}
+.ctabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.1rem;}
+.ctab{font-size:11px;padding:5px 11px;border-radius:99px;border:1.5px solid #e0ddd6;background:#fff;color:#6a6458;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.ctab.on{background:#f0ece3;border-color:#7c6f5a;color:#1a1916;font-weight:500;}
+.country-panel{display:none;}.country-panel.on{display:block;}
+.tier-card{background:#fff;border:2px solid #e0ddd6;border-radius:10px;overflow:hidden;margin-bottom:9px;}
+.tier-head{padding:11px 13px 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.tier-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;flex-shrink:0;}
+.tb1{background:#1a1916;color:#f7f5f0;}.tb2{background:#4a3e2e;color:#f7f5f0;}.tb3{background:#7c6f5a;color:#fff;}.tb4{background:#b8b0a0;color:#fff;}
+.tier-label{font-family:'DM Serif Display',serif;font-size:14px;flex:1;}
+.tier-reach{font-size:10px;color:#9a9588;text-align:right;}
+.tier-schools{padding:0 13px 10px;display:flex;flex-wrap:wrap;gap:5px;}
+.stag{font-size:10px;padding:2px 8px;border-radius:99px;border:1.5px solid #c8b898;color:#4a3e2e;background:#fdf8f0;}
+.tier-note{padding:0 13px 10px;font-size:11px;color:#6a6458;line-height:1.6;border-top:1px solid #f0ede6;padding-top:8px;}
+.matcher{display:none;}.matcher.on{display:block;}
+.prog-wrap{margin-bottom:1.3rem;}
+.prog-label{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9a9588;margin-bottom:6px;}
+.prog-track{height:3px;background:#e0ddd6;border-radius:2px;}
+.prog-fill{height:100%;background:#7c6f5a;border-radius:2px;transition:width .5s ease;}
+.step-num{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9a9588;margin-bottom:5px;}
+.step-q{font-family:'DM Serif Display',serif;font-size:clamp(17px,4vw,24px);line-height:1.25;margin-bottom:4px;}
+.step-q em{font-style:italic;color:#7c6f5a;}
+.step-hint{font-size:12px;color:#9a9588;margin-bottom:1.1rem;line-height:1.5;}
+.options{display:flex;flex-direction:column;gap:6px;margin-bottom:1.1rem;}
+.opt{display:flex;align-items:center;gap:11px;padding:11px 13px;border:2px solid #e0ddd6;border-radius:10px;cursor:pointer;background:#fff;text-align:left;width:100%;color:inherit;transition:all .15s;position:relative;}
+.opt:hover{border-color:#b8b0a0;}.opt.sel{border-color:#7c6f5a;background:#f0ece3;box-shadow:0 0 0 3px #7c6f5a22;}
+.opt.sel::after{content:'✓';position:absolute;right:11px;top:50%;transform:translateY(-50%);width:19px;height:19px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:9px;font-weight:700;line-height:19px;text-align:center;}
+.opt-icon{font-size:17px;flex-shrink:0;width:24px;text-align:center;}
+.opt-text{flex:1;padding-right:22px;}
+.opt-main{font-size:13px;font-weight:500;display:block;line-height:1.3;}
+.opt-sub{font-size:11px;color:#9a9588;margin-top:1px;display:block;}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:1.1rem;}
+.opt-pill{padding:9px 11px;border:2px solid #e0ddd6;border-radius:8px;cursor:pointer;font-size:12px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;}
+.opt-pill:hover{border-color:#b8b0a0;}.opt-pill.sel{border-color:#7c6f5a;color:#1a1916;background:#f0ece3;font-weight:500;}
+.opt-pill.sel::after{content:'✓';position:absolute;right:7px;top:7px;width:15px;height:15px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:8px;font-weight:700;line-height:15px;text-align:center;}
+.opt-pill-en{display:block;font-size:10px;color:#b8b0a0;margin-top:1px;}
+.wcard{background:#fff;border:2px solid #e0ddd6;border-radius:11px;padding:14px;margin-bottom:1.1rem;}
+.wsec{margin-bottom:12px;}
+.wlbl{font-size:10px;font-weight:500;color:#9a9588;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;display:block;}
+.yrs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
+.yr-pill{padding:9px 5px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:11px;font-weight:500;color:#6a6458;background:#fff;text-align:center;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;}
+.yr-pill:hover{border-color:#b8b0a0;}.yr-pill.sel{border-color:#7c6f5a;color:#1a1916;background:#f0ece3;}
+.ind-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.ind-pill{padding:8px 10px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:11px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;line-height:1.3;}
+.ind-pill:hover{border-color:#b8b0a0;}.ind-pill.sel{border-color:#7c6f5a;color:#1a1916;background:#f0ece3;font-weight:500;}
+.ind-pill.sel::after{content:'✓';position:absolute;right:6px;top:6px;width:13px;height:13px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:7px;font-weight:700;line-height:13px;text-align:center;}
+.work-insight{background:#f0ece3;border:1.5px solid #c8b898;border-radius:8px;padding:9px 12px;margin-bottom:1.1rem;font-size:12px;color:#4a3e2e;line-height:1.6;}
+.wi-title{font-weight:500;font-size:10px;color:#7c6058;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.ws-tag{display:inline-block;font-size:10px;background:#fff;color:#4a3e2e;border-radius:99px;padding:2px 8px;margin:2px 2px 2px 0;border:1px solid #c8b898;}
+.spec-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:1.1rem;}
+.spec-pill{padding:8px 9px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:11px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;line-height:1.3;}
+.spec-pill:hover{border-color:#b8b0a0;}.spec-pill.sel{border-color:#7c6f5a;color:#1a1916;background:#f0ece3;font-weight:500;}
+.spec-pill.sel::after{content:'✓';position:absolute;right:5px;top:5px;width:13px;height:13px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:7px;font-weight:700;line-height:13px;text-align:center;}
+.spec-pill-en{display:block;font-size:9px;color:#b8b0a0;margin-top:1px;}
+.spec-new{font-size:8px;background:#e8f4e8;color:#2a6a2a;border-radius:3px;padding:1px 3px;margin-left:2px;vertical-align:middle;}
+.spec-hint-box{background:#fff;border:1.5px solid #c8b898;border-radius:8px;padding:9px 12px;margin-bottom:1.1rem;}
+.sht{font-size:10px;font-weight:500;color:#9a9588;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.sh-tag{display:inline-block;font-size:10px;background:#f0ece3;color:#4a3e2e;border-radius:99px;padding:2px 8px;margin:2px 2px 2px 0;}
+.slider-wrap{margin-bottom:1.1rem;}
+.budget-val{font-family:'DM Serif Display',serif;font-size:26px;color:#7c6f5a;margin-bottom:7px;}
+.budget-usd{font-size:11px;color:#b8b0a0;margin-bottom:9px;}
+input[type=range].custom{-webkit-appearance:none;width:100%;height:3px;background:linear-gradient(to right,#7c6f5a var(--pct,40%),#e0ddd6 var(--pct,40%));border-radius:2px;outline:none;cursor:pointer;}
+input[type=range].custom::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;background:#7c6f5a;border-radius:50%;cursor:pointer;border:3px solid #f7f5f0;box-shadow:0 0 0 2px #7c6f5a;}
+.slider-labels{display:flex;justify-content:space-between;font-size:10px;color:#b8b0a0;margin-top:5px;}
+.school-search{width:100%;background:#fff;border:2px solid #e0ddd6;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1a1916;outline:none;margin-bottom:8px;}
+.school-search:focus{border-color:#7c6f5a;}
+.school-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:1.1rem;max-height:260px;overflow-y:auto;}
+.school-pill{padding:8px 10px;border:2px solid #e0ddd6;border-radius:7px;cursor:pointer;font-size:11px;color:#6a6458;background:#fff;text-align:left;transition:all .15s;width:100%;font-family:'DM Sans',sans-serif;position:relative;}
+.school-pill:hover{border-color:#b8b0a0;}.school-pill.sel{border-color:#7c6f5a;color:#1a1916;background:#f0ece3;font-weight:500;}
+.school-pill.sel::after{content:'✓';position:absolute;right:7px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:#7c6f5a;color:#fff;border-radius:50%;font-size:7px;font-weight:700;line-height:14px;text-align:center;}
+.school-tier-label{font-size:9px;color:#b8b0a0;display:block;margin-top:1px;}
+.lang-wrap{background:#fff;border:2px solid #e0ddd6;border-radius:11px;padding:13px;margin-bottom:1.1rem;}
+.lang-tabs{display:flex;gap:6px;margin-bottom:11px;}
+.lang-tab{flex:1;padding:8px;border:2px solid #e0ddd6;border-radius:7px;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:#6a6458;transition:all .15s;text-align:center;}
+.lang-tab.sel{border-color:#7c6f5a;background:#f0ece3;color:#4a3e2e;}
+.score-val{font-family:'DM Serif Display',serif;font-size:24px;color:#7c6f5a;margin-bottom:8px;}
+.score-range-labels{display:flex;justify-content:space-between;font-size:10px;color:#b8b0a0;margin-top:5px;}
+.lang-elig{margin-top:10px;padding:8px 11px;background:#f7f5f0;border-radius:7px;}
+.lang-elig-title{font-weight:500;font-size:11px;margin-bottom:4px;}
+.elig-row{display:flex;justify-content:space-between;margin-bottom:2px;}
+.es{font-size:10px;color:#6a6458;}.eg{font-size:10px;color:#4a7030;}.ew{font-size:10px;color:#904820;}.en{font-size:10px;color:#b8b0a0;}
+.toefl-note{font-size:10px;color:#904820;background:#fdf0e4;border:1px solid #e0c0a0;border-radius:5px;padding:5px 9px;margin-top:7px;}
+.nav{display:flex;gap:9px;align-items:center;margin-top:1.1rem;}
+.btn-next{padding:12px 24px;background:#1a1916;color:#f7f5f0;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:opacity .2s;}
+.btn-next:hover{opacity:.82;}.btn-next:disabled{opacity:.25;cursor:default;}
+.btn-back{display:flex;align-items:center;gap:5px;padding:12px 14px;background:#fff;color:#1a1916;border:2px solid #c8c4bc;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.btn-back:hover{border-color:#7c6f5a;background:#f0ece3;}
+.bc{display:flex;flex-wrap:wrap;align-items:center;margin-bottom:1.1rem;}
+.edit-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:1rem;}
+.edit-chip{display:flex;align-items:center;gap:3px;font-size:10px;padding:3px 9px 3px 7px;border:1.5px solid #d0ccc4;border-radius:99px;color:#6a6458;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.edit-chip:hover{border-color:#7c6f5a;color:#4a3e2e;background:#f0ece3;}
+.edit-chip-dot{width:4px;height:4px;border-radius:50%;background:#7c6f5a;flex-shrink:0;}
+.results-meta{font-size:11px;color:#9a9588;margin-bottom:.9rem;line-height:1.6;}
+.result-card{border:2px solid #e0ddd6;border-radius:11px;overflow:hidden;margin-bottom:8px;background:#fff;}
+.result-card.top{border-color:#7c6f5a;}
+.rc-head{padding:13px 15px 8px;display:flex;align-items:flex-start;justify-content:space-between;gap:9px;}
+.rc-rank{font-size:10px;color:#9a9588;letter-spacing:.07em;text-transform:uppercase;}
+.rc-name{font-family:'DM Serif Display',serif;font-size:15px;margin:2px 0 1px;}
+.rc-prog{font-size:10px;color:#7c6f5a;font-style:italic;margin-bottom:1px;}
+.rc-country{font-size:10px;color:#9a9588;}
+.rc-score{font-family:'DM Serif Display',serif;font-size:21px;color:#7c6f5a;text-align:right;}
+.rc-score-label{font-size:9px;color:#b8b0a0;text-transform:uppercase;letter-spacing:.04em;text-align:right;}
+.rc-body{padding:0 15px 11px;}
+.rc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;}
+.rc-tag{font-size:10px;padding:2px 7px;border-radius:99px;border:1px solid #e0ddd6;color:#9a9588;background:#f7f5f0;}
+.rc-tag.good{border-color:#b8c8a8;color:#4a7030;background:#f0f5ea;}
+.rc-tag.warn{border-color:#e0c0a0;color:#904820;background:#fdf0e4;}
+.rc-tag.info{border-color:#b8d4f0;color:#1858a0;background:#eef4fc;}
+.rc-tag.sf{border-color:#c8a84050;color:#7a6010;background:#fdf8e4;}
+.rc-tag.sm{border-color:#c8b89850;color:#5a4828;background:#fdf5ec;}
+.rc-tag.wp{border-color:#d4b8f050;color:#5818a0;background:#f4eeff;}
+.rc-tag.bar-extra{border-color:#b8d4b850;color:#2a6a2a;background:#eefaee;}
+.bar-note-box{font-size:10px;color:#2a6a2a;background:#eefaee;border:1px solid #b8d4b8;border-radius:5px;padding:5px 9px;margin-bottom:7px;}
+.rc-insight{font-size:11px;color:#6a6458;line-height:1.6;border-top:1px solid #f0ede6;padding-top:7px;margin-bottom:8px;}
+.rc-fb{display:flex;align-items:center;gap:6px;border-top:1px solid #f0ede6;padding-top:7px;flex-wrap:wrap;}
+.rc-fb-label{font-size:10px;color:#b8b0a0;}
+.thumb-btn{background:#f7f5f0;border:1.5px solid #e0ddd6;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:11px;color:#6a6458;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.thumb-btn.up.active{border-color:#7c9a60;color:#4a7030;background:#f0f5ea;}
+.thumb-btn.down.active{border-color:#c09060;color:#904820;background:#fdf0e4;}
+.flag-btn{background:none;border:none;cursor:pointer;font-size:10px;color:#c8c4bc;margin-left:auto;padding:3px 4px;font-family:'DM Sans',sans-serif;transition:color .15s;}
+.flag-btn:hover{color:#904820;}
+.fp-field{width:100%;background:#f7f5f0;border:1.5px solid #e0ddd6;border-radius:7px;color:#1a1916;font-family:'DM Sans',sans-serif;font-size:11px;padding:8px 10px;resize:none;outline:none;line-height:1.6;margin-bottom:5px;}
+.fp-field:focus{border-color:#7c6f5a;}.fp-field::placeholder{color:#c8c4bc;}
+.btn-flag-sub{padding:5px 11px;background:#1a1916;color:#f7f5f0;border:none;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;cursor:pointer;}
+.btn-flag-can{padding:5px 9px;background:transparent;color:#9a9588;border:1.5px solid #e0ddd6;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:10px;cursor:pointer;margin-left:4px;}
+.flag-sent-msg{font-size:11px;color:#4a7030;}
+.fb-panel{border:2px solid #e0ddd6;border-radius:11px;padding:14px;margin-top:1.1rem;background:#fff;}
+.fp-title{font-family:'DM Serif Display',serif;font-size:17px;margin-bottom:2px;}
+.fp-sub{font-size:11px;color:#9a9588;margin-bottom:.9rem;}
+.fp-tabs{display:flex;gap:5px;margin-bottom:.8rem;flex-wrap:wrap;}
+.fp-tab{font-size:10px;padding:3px 10px;border-radius:99px;border:1.5px solid #e0ddd6;background:transparent;color:#6a6458;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.fp-tab.on{background:#f0ece3;border-color:#7c6f5a;color:#4a3e2e;font-weight:500;}
+.fp-star-row{display:flex;gap:4px;margin-bottom:.8rem;}
+.star{font-size:20px;cursor:pointer;color:#e0ddd6;user-select:none;transition:color .1s;}
+.star.on{color:#c8a840;}
+.fp-row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
+.fp-anon{font-size:10px;color:#9a9588;display:flex;align-items:center;gap:4px;}
+.fp-anon input{accent-color:#7c6f5a;cursor:pointer;}
+.fp-sent{text-align:center;padding:1.5rem 0;}
+.fp-sent-icon{font-size:30px;margin-bottom:6px;}
+.fp-sent-title{font-family:'DM Serif Display',serif;font-size:17px;color:#4a7030;margin-bottom:3px;}
+.fp-sent-sub{font-size:11px;color:#9a9588;}
+.sending-indicator{font-size:10px;color:#9a9588;margin-left:8px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.fade{animation:fadeUp .28s ease both;}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}
+</style>
+</head>
+<body>
+<div class="app"><div class="inner">
+<div class="top-nav fade">
+  <button class="tnav-btn on" id="btn-m" onclick="sv('matcher')">🔍 Matcher 匹配器</button>
+  <button class="tnav-btn" id="btn-t" onclick="sv('tiers')">🏫 院校排名指南</button>
+</div>
+<div class="tier-guide" id="view-tiers">
+  <div class="tg-title fade">全球法学院排名指南</div>
+  <div class="tg-sub fade">基于2025年最新排名 · 点击国家切换</div>
+  <div class="ctabs fade" id="ctabs"></div>
+  <div id="cpanels"></div>
+</div>
+<div class="matcher on" id="view-matcher"><div id="root"></div></div>
+</div></div>
+
+<script>
+/* ── FEEDBACK ENDPOINT ── */
+const FEEDBACK_URL = 'https://script.google.com/macros/s/AKfycbz6m9U4qd6n7WL6kY-mYnDdWONlW_iyNtIi21o-lqcDD03Y0K6hQoI9hdLE8AA2lP8h/exec';
+
+function sendFeedback(data) {
+  return fetch(FEEDBACK_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  });
+}
+
+function getUserProfile() {
+  const sch = SCHOOLS.find(s => s.id === S.schoolId);
+  const sp = specs.find(s => s.id === S.specialty);
+  return [
+    sch ? sch.n + '(' + TL[sch.t] + ')' : '—',
+    sp ? sp.l : '—',
+    S.workStatus === 'fresh' ? '应届' : (S.workYears || '?') + '年·' + (inds.find(i=>i.id===S.workIndustry)?.l||'—'),
+    S.langType ? (S.langType === 'none' ? '未考' : S.langType.toUpperCase() + ' ' + (S.langScore || '?')) : '—'
+  ].join(' · ');
+}
+
+/* ── view toggle ── */
+function sv(v){['matcher','tiers'].forEach(x=>{document.getElementById('view-'+x).classList.toggle('on',x===v);document.getElementById('btn-'+(x==='matcher'?'m':'t')).classList.toggle('on',x===v);});}
+
+/* ── TIER GUIDE ── */
+const TC=[
+  {id:'cn',flag:'🇨🇳',label:'中国',src:'软科2025',tiers:[
+    {b:'tb1',l:'第一档 T1',r:'哈佛/耶鲁可冲',n:'软科前5。中政A+。',s:['1.中国政法','2.人大','3.武汉大学','4.北京大学','5.华东政法']},
+    {b:'tb2',l:'第二档 T2',r:'T6–T14竞争力',n:'前13。清华接近T1，SJTU/Fudan外资所认可高。',s:['6.西南政法','7.清华','8.吉林','9.上海交大','10.中南财经政法','11.复旦','12.西北政法','13.对外经贸']},
+    {b:'tb3',l:'第三档 T3',r:'T14–T30·UK/HK/AU',n:'14–25名。语言和GPA权重更大。',s:['14.南京大学','15.浙大','16.北师大','17.厦大','18.中山','19.山大','20.北航','21.南开','22.华科','23.中国海洋','24.上海政法','25.苏州大学']},
+    {b:'tb4',l:'第四档 T4',r:'经历可弥补',n:'25名外。魔圈/V10实习+工作经验大幅弥补院校劣势。',s:['25名外各院校','省属重点','财经类院校']},
+  ]},
+  {id:'us',flag:'🇺🇸',label:'美国',src:'U.S. News 2025',tiers:[
+    {b:'tb1',l:'T3 (HYS)',r:'全球品牌',n:'Stanford/Yale #1，Harvard #6（仅TOEFL≥100）。Stanford强烈偏好2年+律所/科技经验。',s:['Yale #1','Stanford #1（科技/IP，偏工作党）','Harvard #6（TOEFL only）']},
+    {b:'tb2',l:'T6',r:'BigLaw·NY Bar',n:'Columbia公司法#1；NYU税法/科技/娱乐；Chicago竞争法偏工作党。',s:['U Chicago #3（偏工作党）','Columbia #10（公司法）','NYU #8（税法/科技）']},
+    {b:'tb3',l:'T14/T17',r:'全美BigLaw·NY Bar',n:'Penn金融+沃顿偏工作经验；Michigan偏工作党；UCLA娱乐/IP；Berkeley科技/环境；Georgetown数据隐私。',s:['Penn #5（金融+沃顿）','Michigan #8（偏工作党）','UCLA #12（娱乐/IP）','Berkeley #13（科技/环境）','Georgetown #14（数据隐私）']},
+    {b:'tb4',l:'专项强校',r:'特定方向首选',n:'USC娱乐；Cornell Tech科技创业偏技术背景；Pepperdine娱乐/体育。',s:['USC Gould（娱乐/媒体）','Cornell Tech（科技创业）','Pepperdine（娱乐/体育）']},
+  ]},
+  {id:'uk',flag:'🇬🇧',label:'英国',src:'QS Law 2025',tiers:[
+    {b:'tb1',l:'第一档',r:'全球顶级',n:'Oxford QS#3（TOEFL 110+），Cambridge QS#5（TOEFL 100+）。',s:['Oxford BCL/MSt','Cambridge LLM']},
+    {b:'tb2',l:'第二档',r:'魔圈·金融',n:'LSE QS#7（TOEFL 107），UCL QS#10（TOEFL 92，较易录）。',s:['LSE LLM','UCL Laws LLM']},
+    {b:'tb3',l:'第三档',r:'科技/仲裁',n:"King's QS#18（IP/数据法）；Edinburgh（IT Law，低费）；QMUL（娱乐/科技媒体）。",s:["King's IP & Info","Edinburgh IT Law","QMUL Tech Media"]},
+    {b:'tb4',l:'第四档',r:'区域认可',n:'诺丁汉、布里斯托、曼彻斯特等。',s:['Nottingham','Bristol','Manchester']},
+  ]},
+  {id:'hk',flag:'🇭🇰',label:'香港',src:'QS Law 2025',tiers:[
+    {b:'tb1',l:'第一档',r:'仲裁/回国首选',n:'HKU QS#30（仲裁/国际）；CUHK AI Law；CityU仲裁专项。',s:['HKU LLM QS#30','CUHK AI Law QS#59','CityU仲裁QS#42']},
+  ]},
+  {id:'sg',flag:'🇸🇬',label:'新加坡',src:'QS Law 2025',tiers:[
+    {b:'tb1',l:'NUS & SMU',r:'亚洲仲裁中心',n:'NUS QS亚洲#1，SIAC仲裁、AI中心CARL；SMU国际商法。',s:['NUS LLM','SMU LLM']},
+  ]},
+  {id:'au',flag:'🇦🇺',label:'澳大利亚',src:'QS Law 2025',tiers:[
+    {b:'tb1',l:'G8领头',r:'亚太·PR友好',n:'Melbourne QS#12（环境法）；Sydney QS#18；ANU QS#20（国际/公法）。',s:['Melbourne Law','Sydney Law','ANU Law']},
+    {b:'tb2',l:'G8其余',r:'PR可申',n:'UNSW（科技/媒体法），Queensland。',s:['UNSW','Queensland','Monash']},
+  ]},
+  {id:'ca',flag:'🇨🇦',label:'加拿大',src:'QS Law 2025',tiers:[
+    {b:'tb1',l:'第一档',r:'PR通道强',n:'Toronto QS#17，McGill QS#41。PGWP最长3年。',s:['U Toronto LLM','McGill LLM']},
+    {b:'tb2',l:'第二档',r:'PGWP可申',n:'UBC QS#38（环境法），Osgoode（16专项）。',s:['UBC Allard','Osgoode Hall']},
+  ]},
+];
+(function buildTG(){
+  const te=document.getElementById('ctabs'),pe=document.getElementById('cpanels');
+  TC.forEach((c,ci)=>{
+    const tab=document.createElement('button');tab.className='ctab'+(ci===0?' on':'');tab.innerHTML=c.flag+' '+c.label;
+    tab.onclick=()=>{document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.country-panel').forEach(p=>p.classList.remove('on'));tab.classList.add('on');document.getElementById('cp-'+c.id).classList.add('on');};
+    te.appendChild(tab);
+    const panel=document.createElement('div');panel.className='country-panel'+(ci===0?' on':'');panel.id='cp-'+c.id;
+    let ph=`<div style="font-size:10px;color:#b8b0a0;margin-bottom:8px">数据来源：${c.src}</div>`;
+    c.tiers.forEach(t=>{ph+=`<div class="tier-card"><div class="tier-head"><span class="tier-badge ${t.b}">${t.l}</span><span class="tier-label">${t.l}</span><span class="tier-reach">${t.r}</span></div><div class="tier-schools">${t.s.map(s=>`<span class="stag">${s}</span>`).join('')}</div><div class="tier-note">${t.n}</div></div>`;});
+    panel.innerHTML=ph;pe.appendChild(panel);
+  });
+})();
+
+/* ── DATA ── */
+const SCHOOLS=[
+  {id:'cupl',n:'中国政法大学',e:'CUPL',t:'t1',r:1},{id:'ruc',n:'中国人民大学',e:'RUC',t:'t1',r:2},
+  {id:'whu',n:'武汉大学',e:'WHU',t:'t1',r:3},{id:'pku',n:'北京大学',e:'PKU',t:'t1',r:4},
+  {id:'ecupl',n:'华东政法大学',e:'ECUPL',t:'t1',r:5},{id:'swupl',n:'西南政法大学',e:'SWUPL',t:'t2',r:6},
+  {id:'thu',n:'清华大学',e:'THU',t:'t2',r:7},{id:'jlu',n:'吉林大学',e:'JLU',t:'t2',r:8},
+  {id:'sjtu',n:'上海交通大学',e:'SJTU',t:'t2',r:9},{id:'zuel',n:'中南财经政法',e:'ZUEL',t:'t2',r:10},
+  {id:'fudan',n:'复旦大学',e:'Fudan',t:'t2',r:11},{id:'nwupl',n:'西北政法大学',e:'NWUPL',t:'t2',r:12},
+  {id:'uibe',n:'对外经贸大学',e:'UIBE',t:'t2',r:13},{id:'nju',n:'南京大学',e:'NJU',t:'t3',r:14},
+  {id:'zju',n:'浙江大学',e:'ZJU',t:'t3',r:15},{id:'bnu',n:'北京师范大学',e:'BNU',t:'t3',r:16},
+  {id:'xmu',n:'厦门大学',e:'XMU',t:'t3',r:17},{id:'sysu',n:'中山大学',e:'SYSU',t:'t3',r:18},
+  {id:'sdu',n:'山东大学',e:'SDU',t:'t3',r:19},{id:'buaa',n:'北航',e:'BUAA',t:'t3',r:20},
+  {id:'nku',n:'南开大学',e:'NKU',t:'t3',r:21},{id:'hust',n:'华中科技大学',e:'HUST',t:'t3',r:22},
+  {id:'ouc',n:'中国海洋大学',e:'OUC',t:'t3',r:23},{id:'shupl',n:'上海政法学院',e:'SHUPL',t:'t3',r:24},
+  {id:'szu',n:'苏州大学',e:'SZU',t:'t3',r:25},{id:'t4',n:'其他院校',e:'Outside top 25',t:'t4',r:99},
+];
+const TL={t1:'第一档 T1',t2:'第二档 T2',t3:'第三档 T3',t4:'第四档 T4'};
+const STEPS=7;
+const S={step:0,goal:null,schoolId:null,schoolTier:null,budget:50,regions:[],specialty:null,
+  workStatus:null,workYears:null,workIndustry:null,
+  langType:null,langScore:null,ss:'',
+  thumbs:{},flagOpen:{},flagSent:{},flagText:{},fpTab:'overall',fpStars:0,fpHover:0,fpText:'',fpSent:false};
+
+const goals=[
+  {id:'bar',icon:'⚖️',main:'Qualify as a lawyer in a US state',sub:'美国某州律师资格 · 留美发展'},
+  {id:'llm2jd',icon:'🎓',main:'LLM with potential transfer to JD',sub:'LLM转JD · 长期留美路径'},
+  {id:'china_firm',icon:'🏢',main:'Return to China — law firm',sub:'回国 · 内所/外资所中国办公室'},
+  {id:'inhouse',icon:'💼',main:'Return to China — in-house legal',sub:'回国 · 企业法务 · 跨国公司法务部'},
+  {id:'civil',icon:'📋',main:'Return to China — civil service',sub:'回国考公 · 政府机关 · 涉外单位'},
+  {id:'academic',icon:'📚',main:'Academic / PhD track',sub:'学术 · SJD/JSD · 英美港新欧博士'},
+  {id:'open',icon:'🌐',main:'Keep all options open',sub:'方向未定 · 综合考量'},
+];
+const regionOpts=[
+  {id:'us',l:'🇺🇸 美国',e:'United States'},{id:'uk',l:'🇬🇧 英国',e:'United Kingdom'},
+  {id:'hk',l:'🇭🇰 香港',e:'Hong Kong'},{id:'au',l:'🇦🇺 澳大利亚',e:'Australia'},
+  {id:'ca',l:'🇨🇦 加拿大',e:'Canada'},{id:'sg',l:'🇸🇬 新加坡',e:'Singapore'},
+  {id:'any',l:'🌐 不确定',e:'Open to all'},
+];
+const specs=[
+  {id:'corp',l:'公司/金融法',e:'Corporate & Finance',n:false},{id:'ip',l:'知识产权',e:'IP Law',n:false},
+  {id:'arb',l:'国际仲裁',e:'Arbitration',n:false},{id:'intl',l:'国际法/公法',e:'Public Intl Law',n:false},
+  {id:'tax',l:'税法',e:'Tax Law',n:false},{id:'tech',l:'科技法',e:'Technology Law',n:true},
+  {id:'data',l:'数据隐私法',e:'Data Privacy Law',n:true},{id:'ai',l:'AI法律',e:'AI & Regulation',n:true},
+  {id:'ent',l:'娱乐/媒体法',e:'Entertainment',n:true},{id:'env',l:'环境/能源法',e:'Environmental Law',n:false},
+  {id:'fin',l:'金融监管',e:'Financial Regulation',n:false},{id:'comp',l:'竞争/反垄断',e:'Competition Law',n:false},
+  {id:'gen',l:'综合/未定',e:'General',n:false},
+];
+const inds=[
+  {id:'law_firm',l:'律所',e:'Law Firm'},{id:'inhouse_co',l:'企业法务',e:'In-House Legal'},
+  {id:'govt',l:'政府/司法',e:'Government'},{id:'finance',l:'金融/投行',e:'Finance/Banking'},
+  {id:'tech',l:'科技/互联网',e:'Technology'},{id:'consulting',l:'咨询/会计',e:'Consulting'},
+  {id:'academia',l:'学术/科研',e:'Academia'},{id:'other',l:'其他行业',e:'Other'},
+];
+const SPEC_HINTS={
+  corp:['Columbia（#1公司法）','NYU','Penn+沃顿','LSE','HKU'],ip:['Stanford','Duke','Berkeley','UCLA','King\'s（UK）'],
+  arb:['NUS（SIAC）','HKU（HKIAC）','CityU HK','LSE','King\'s'],intl:['Georgetown','NYU','Oxford','Cambridge','LSE','ANU','McGill'],
+  tax:['NYU（全美#1）','Georgetown','Penn','LSE'],tech:['Cornell Tech','Berkeley','Stanford','King\'s','Edinburgh','QMUL'],
+  data:['Georgetown','USC Gould','King\'s','Cornell Tech','Tilburg（GDPR）'],ai:['Cornell Tech','Berkeley','Stanford','CUHK AI Law','NUS（CARL）'],
+  ent:['USC Gould（好莱坞）','UCLA（Ziffren）','Pepperdine（专项）','Berkeley','QMUL（UK）'],env:['Melbourne（#1）','ANU','Berkeley','UBC','UCL'],
+  fin:['Penn+沃顿','LSE','Georgetown','BU银行金融','Toronto'],comp:['Chicago（权威）','LSE','Georgetown','NYU','McGill'],
+  gen:['Columbia','NYU','LSE','UCL','HKU','Melbourne','NUS'],
+};
+const stepLabels=['Goal','School 院校','Budget 预算','Regions','Specialty','工作经历','Language'];
+
+const P=[
+  {name:'Columbia Law',prog:'LLM',c:'🇺🇸 New York',cost:87,bd:true,be:false,bn:null,jd:true,pr:97,wp:1,reg:['us'],g:['bar','llm2jd','china_firm','inhouse'],t:['t1','t2','t3'],lang:{toefl:100,ielts:7.0},sp:{corp:3,ip:2,arb:1,intl:2,tax:1,tech:1,data:1,ai:1,ent:1,env:1,fin:2,comp:1,gen:3},ins:'公司法全美#1，NY Bar eligible，LLM→JD通道。欢迎应届生和有经验律师。'},
+  {name:'NYU School of Law',prog:'LLM / Tax / Tech / Intl',c:'🇺🇸 New York',cost:83,bd:true,be:false,bn:null,jd:true,pr:94,wp:1,reg:['us'],g:['bar','llm2jd','china_firm','inhouse','open'],t:['t1','t2','t3','t4'],lang:{toefl:100,ielts:7.0},sp:{corp:2,ip:2,arb:1,intl:3,tax:3,tech:2,data:2,ai:2,ent:2,env:1,fin:2,comp:2,gen:3},ins:'税法全美#1，科技/娱乐/竞争法设专项。最大T6 LLM（450人），LLM→JD通道，各背景均开放。'},
+  {name:'Harvard Law',prog:'LLM',c:'🇺🇸 Cambridge',cost:83,bd:true,be:false,bn:null,jd:false,pr:99,wp:2,reg:['us'],g:['bar','china_firm','inhouse','academic'],t:['t1'],lang:{toefl:100,ielts:null},sp:{corp:2,ip:2,arb:1,intl:2,tax:1,tech:1,data:1,ai:1,ent:1,env:2,fin:1,comp:1,gen:3},ins:'全球品牌无敌。TOEFL≥100（四项各≥25），不接受雅思。应届仅3–5席，强烈偏好T1院校+工作经验。'},
+  {name:'U Chicago Law',prog:'LLM',c:'🇺🇸 Chicago',cost:80,bd:true,be:false,bn:null,jd:false,pr:96,wp:2,reg:['us'],g:['bar','academic'],t:['t1','t2'],lang:{toefl:104,ielts:7.0},sp:{corp:2,ip:1,arb:1,intl:2,tax:1,tech:1,data:1,ai:1,ent:0,env:1,fin:2,comp:3,gen:2},ins:'法律经济学旗舰，竞争/反垄断权威。强烈偏好律师或研究生申请者。'},
+  {name:'Stanford Law',prog:'LLM — Law, Science & Technology',c:'🇺🇸 Stanford',cost:87,bd:false,be:true,bn:'额外修满学分后可申请CA Bar资格（通常需加一学期）',jd:false,pr:97,wp:3,reg:['us'],g:['academic','open','bar'],t:['t1'],lang:{toefl:100,ielts:7.0},sp:{corp:1,ip:3,arb:0,intl:1,tax:1,tech:3,data:3,ai:3,ent:1,env:2,fin:1,comp:1,gen:2},ins:'科技/IP/AI法律学术顶尖，每方向仅15–20人。强烈要求2年+律所/科技经验或理工背景。'},
+  {name:'UC Berkeley Law',prog:'LLM + Law & Tech Certificate',c:'🇺🇸 Berkeley',cost:73,bd:true,be:false,bn:null,jd:false,pr:88,wp:1,reg:['us'],g:['bar','open','inhouse'],t:['t1','t2','t3','t4'],lang:{toefl:90,ielts:7.0},sp:{corp:1,ip:3,arb:0,intl:1,tax:1,tech:3,data:2,ai:3,ent:2,env:3,fin:1,comp:1,gen:2},ins:'硅谷心脏，科技/AI/环境法强。CA Bar eligible，各类背景均欢迎。'},
+  {name:'UCLA School of Law',prog:'LLM — Entertainment, Arts & Tech',c:'🇺🇸 Los Angeles',cost:68,bd:true,be:false,bn:null,jd:false,pr:85,wp:1,reg:['us'],g:['bar','open','inhouse'],t:['t1','t2','t3','t4'],lang:{toefl:100,ielts:7.0},sp:{corp:1,ip:3,arb:0,intl:1,tax:1,tech:2,data:2,ai:2,ent:3,env:1,fin:1,comp:1,gen:2},ins:'Ziffren娱乐法研究中心，T14成员，娱乐/IP强。CA Bar eligible。'},
+  {name:'USC Gould Law',prog:'LLM — Entertainment & Privacy',c:'🇺🇸 Los Angeles',cost:58,bd:true,be:false,bn:null,jd:false,pr:74,wp:0,reg:['us'],g:['bar','open','inhouse'],t:['t1','t2','t3','t4'],lang:{toefl:100,ielts:7.0},sp:{corp:1,ip:2,arb:0,intl:1,tax:1,tech:2,data:3,ai:1,ent:3,env:0,fin:1,comp:0,gen:2},ins:'好莱坞旁，娱乐/媒体法全美最佳地理，专设Entertainment LLM及Privacy LLM。CA Bar eligible。'},
+  {name:'Cornell Tech',prog:'LLM — Law, Technology & Entrepreneurship',c:'🇺🇸 New York',cost:90,bd:false,be:true,bn:'额外修满学分（通常加一学期）后可申请NY Bar资格',jd:false,pr:85,wp:2,reg:['us'],g:['open','inhouse','bar'],t:['t1','t2','t3','t4'],lang:{toefl:100,ielts:7.0},sp:{corp:0,ip:2,arb:0,intl:0,tax:0,tech:3,data:3,ai:3,ent:1,env:0,fin:0,comp:1,gen:1},ins:'科技法+创业全球独特，AI/数据法核心。偏好技术行业工作经验或理工背景。'},
+  {name:'Georgetown Law',prog:'LLM / Privacy & Tech / Intl',c:'🇺🇸 Washington DC',cost:65,bd:true,be:false,bn:null,jd:false,pr:85,wp:1,reg:['us'],g:['bar','intl','open','civil'],t:['t1','t2','t3','t4'],lang:{toefl:100,ielts:7.0},sp:{corp:1,ip:1,arb:1,intl:3,tax:2,tech:2,data:3,ai:2,ent:0,env:1,fin:2,comp:2,gen:2},ins:'DC政策中心，数据隐私/国际法强，NY Bar eligible。对各背景开放，政府背景加分。'},
+  {name:'Penn Carey Law',prog:'LLM + Wharton Certificate',c:'🇺🇸 Philadelphia',cost:73,bd:true,be:false,bn:null,jd:false,pr:88,wp:2,reg:['us'],g:['bar','china_firm','inhouse','open'],t:['t1','t2','t3'],lang:{toefl:100,ielts:7.0},sp:{corp:2,ip:1,arb:1,intl:1,tax:2,tech:1,data:1,ai:0,ent:0,env:1,fin:3,comp:1,gen:2},ins:'可选修沃顿商学院课程，金融法+商法最佳组合。偏好有工作经验，金融行业背景大加分。'},
+  {name:'Duke Law',prog:'LLM',c:'🇺🇸 Durham',cost:73,bd:true,be:false,bn:null,jd:false,pr:88,wp:1,reg:['us'],g:['bar','china_firm','open'],t:['t1','t2','t3'],lang:{toefl:100,ielts:7.0},sp:{corp:1,ip:3,arb:1,intl:2,tax:1,tech:1,data:1,ai:1,ent:0,env:2,fin:1,comp:1,gen:2},ins:'IP和国际法强，全美Bar passage rate#1（94.87%），约10名中国学生。'},
+  {name:'Michigan Law',prog:'LLM',c:'🇺🇸 Ann Arbor',cost:73,bd:true,be:false,bn:null,jd:false,pr:90,wp:2,reg:['us'],g:['bar','academic','china_firm'],t:['t1','t2'],lang:{toefl:100,ielts:7.0},sp:{corp:2,ip:1,arb:1,intl:2,tax:1,tech:1,data:1,ai:0,ent:0,env:1,fin:1,comp:1,gen:2},ins:'传统强校，约4–7名中国学生。偏好有律所工作经验申请者，LLM→JD转学可能。'},
+  {name:'Pepperdine Law',prog:'LLM — Entertainment, Media & Sports',c:'🇺🇸 Malibu',cost:55,bd:true,be:false,bn:null,jd:false,pr:65,wp:0,reg:['us'],g:['bar','open'],t:['t2','t3','t4'],lang:{toefl:89,ielts:6.5},sp:{corp:0,ip:1,arb:2,intl:0,tax:0,tech:0,data:0,ai:0,ent:3,env:0,fin:0,comp:0,gen:1},ins:'全美唯一集娱乐+媒体+体育法专属LLM，CA Bar eligible。'},
+  {name:'Oxford BCL/MSt',prog:'BCL / MSt in Law',c:'🇬🇧 Oxford',cost:50,bd:false,be:false,bn:null,jd:false,pr:98,wp:1,reg:['uk'],g:['academic'],t:['t1'],lang:{toefl:110,ielts:7.5},sp:{corp:2,ip:1,arb:1,intl:3,tax:1,tech:1,data:1,ai:1,ent:0,env:2,fin:1,comp:2,gen:2},ins:'QS全球#3，学术为主，DPhil博士路径强，中国学术界认可度极高。'},
+  {name:'Cambridge LLM',prog:'LLM',c:'🇬🇧 Cambridge',cost:48,bd:false,be:false,bn:null,jd:false,pr:97,wp:1,reg:['uk'],g:['academic','china_firm'],t:['t1','t2'],lang:{toefl:100,ielts:7.5},sp:{corp:2,ip:2,arb:1,intl:3,tax:1,tech:1,data:1,ai:1,ent:0,env:1,fin:1,comp:2,gen:2},ins:'QS全球#5，研究型LLM，强博士路径，被中国学术机构高度认可。'},
+  {name:'LSE',prog:'LLM',c:'🇬🇧 London',cost:55,bd:false,be:false,bn:null,jd:false,pr:90,wp:1,reg:['uk'],g:['china_firm','inhouse','civil','open'],t:['t1','t2','t3','t4'],lang:{toefl:107,ielts:7.0},sp:{corp:2,ip:1,arb:2,intl:3,tax:2,tech:1,data:2,ai:1,ent:0,env:1,fin:3,comp:3,gen:3},ins:'QS全球#7，金融监管/竞争法/国际法三强，伦敦金融城核心，TOEFL 107+。'},
+  {name:'UCL Laws',prog:'LLM',c:'🇬🇧 London',cost:50,bd:false,be:false,bn:null,jd:false,pr:87,wp:0,reg:['uk'],g:['china_firm','inhouse','open','academic','civil'],t:['t1','t2','t3','t4'],lang:{toefl:92,ielts:6.5},sp:{corp:2,ip:2,arb:1,intl:3,tax:1,tech:2,data:2,ai:2,ent:1,env:2,fin:1,comp:1,gen:3},ins:'QS全球#10，IP/技术法/国际法均强，接受TOEFL 92+，欢迎应届生及有经验申请者。'},
+  {name:"King's College London",prog:'LLM — IP & Information Law',c:'🇬🇧 London',cost:46,bd:false,be:false,bn:null,jd:false,pr:83,wp:0,reg:['uk'],g:['china_firm','inhouse','open','civil'],t:['t1','t2','t3','t4'],lang:{toefl:92,ielts:7.0},sp:{corp:1,ip:3,arb:2,intl:2,tax:1,tech:3,data:3,ai:2,ent:2,env:1,fin:1,comp:2,gen:2},ins:'QS#18，IP/信息/数据法专项全球顶级，接受TOEFL 92+。'},
+  {name:'Edinburgh Law',prog:'LLM — IT Law',c:'🇬🇧 Edinburgh',cost:32,bd:false,be:false,bn:null,jd:false,pr:78,wp:0,reg:['uk'],g:['open','inhouse','academic'],t:['t1','t2','t3','t4'],lang:{toefl:92,ielts:6.5},sp:{corp:1,ip:2,arb:0,intl:1,tax:1,tech:3,data:3,ai:2,ent:1,env:2,fin:0,comp:1,gen:2},ins:'THE全球#16，IT Law专项，全英学费最低之一，性价比极高。'},
+  {name:'Queen Mary London',prog:'LLM — Technology, Media & Telecomm',c:'🇬🇧 London',cost:40,bd:false,be:false,bn:null,jd:false,pr:76,wp:0,reg:['uk'],g:['open','inhouse'],t:['t2','t3','t4'],lang:{toefl:85,ielts:6.5},sp:{corp:0,ip:2,arb:0,intl:1,tax:0,tech:3,data:2,ai:2,ent:3,env:0,fin:0,comp:1,gen:1},ins:'科技媒体电信法专项，娱乐媒体法在英国名列前茅，学费适中。'},
+  {name:'HKU',prog:'LLM',c:'🇭🇰 Hong Kong',cost:22,bd:false,be:false,bn:null,jd:false,pr:75,wp:0,reg:['hk'],g:['china_firm','inhouse','civil','open'],t:['t1','t2','t3','t4'],lang:{toefl:80,ielts:6.0},sp:{corp:2,ip:1,arb:3,intl:3,tax:1,tech:1,data:1,ai:1,ent:0,env:1,fin:2,comp:1,gen:3},ins:'QS#30，回国性价比最高，HKIAC仲裁中心所在地，学费最低之一。'},
+  {name:'CUHK',prog:'LLM — AI Law / Chinese Business Law',c:'🇭🇰 Hong Kong',cost:18,bd:false,be:false,bn:null,jd:false,pr:70,wp:0,reg:['hk'],g:['china_firm','inhouse','civil','open'],t:['t1','t2','t3','t4'],lang:{toefl:79,ielts:6.0},sp:{corp:2,ip:1,arb:1,intl:2,tax:1,tech:2,data:1,ai:3,ent:0,env:1,fin:1,comp:1,gen:2},ins:'全球首批AI Law LLM专项，学费全港最低，大湾区人脉强。'},
+  {name:'CityU Hong Kong',prog:'LLM — Arbitration & Dispute Resolution',c:'🇭🇰 Hong Kong',cost:20,bd:false,be:false,bn:null,jd:false,pr:72,wp:1,reg:['hk'],g:['china_firm','inhouse','open'],t:['t1','t2','t3','t4'],lang:{toefl:79,ielts:6.0},sp:{corp:1,ip:0,arb:3,intl:2,tax:0,tech:0,data:0,ai:0,ent:0,env:0,fin:1,comp:1,gen:2},ins:'QS#42，仲裁专项全港最强，HKIAC/CIETAC常驻地。'},
+  {name:'NUS',prog:'LLM',c:'🇸🇬 Singapore',cost:38,bd:false,be:false,bn:null,jd:false,pr:80,wp:1,reg:['sg'],g:['china_firm','inhouse','civil','open'],t:['t1','t2','t3','t4'],lang:{toefl:85,ielts:6.0},sp:{corp:2,ip:1,arb:3,intl:3,tax:1,tech:2,data:1,ai:2,ent:0,env:1,fin:2,comp:1,gen:3},ins:'QS亚洲#1，SIAC仲裁中心、AI法律中心CARL，一带一路法律首选。'},
+  {name:'SMU Singapore',prog:'LLM — International Business Law',c:'🇸🇬 Singapore',cost:32,bd:false,be:false,bn:null,jd:false,pr:72,wp:1,reg:['sg'],g:['china_firm','inhouse','open'],t:['t2','t3','t4'],lang:{toefl:90,ielts:6.0},sp:{corp:2,ip:0,arb:2,intl:2,tax:1,tech:1,data:0,ai:0,ent:0,env:0,fin:2,comp:1,gen:2},ins:'国际商法和金融法强，学费低于NUS，录取门槛相对宽松。'},
+  {name:'Melbourne Law',prog:'LLM',c:'🇦🇺 Melbourne',cost:46,bd:false,be:false,bn:null,jd:false,pr:78,wp:0,reg:['au'],g:['open','china_firm','inhouse'],t:['t1','t2','t3','t4'],lang:{toefl:79,ielts:6.5},sp:{corp:2,ip:1,arb:2,intl:2,tax:1,tech:1,data:1,ai:1,ent:0,env:3,fin:1,comp:2,gen:3},ins:'QS全球#12，环境法全球顶尖，Post-Study Work Visa（2–4年），PR路径可行。'},
+  {name:'Sydney Law',prog:'LLM',c:'🇦🇺 Sydney',cost:48,bd:false,be:false,bn:null,jd:false,pr:76,wp:0,reg:['au'],g:['open','china_firm'],t:['t1','t2','t3','t4'],lang:{toefl:85,ielts:6.5},sp:{corp:2,ip:1,arb:1,intl:2,tax:1,tech:1,data:1,ai:0,ent:2,env:2,fin:1,comp:1,gen:2},ins:'QS全球#18，悉尼金融中心，媒体娱乐法选课丰富，PGWP可申。'},
+  {name:'ANU Law',prog:'LLM',c:'🇦🇺 Canberra',cost:42,bd:false,be:false,bn:null,jd:false,pr:74,wp:0,reg:['au'],g:['open','academic','civil'],t:['t1','t2','t3','t4'],lang:{toefl:80,ielts:6.5},sp:{corp:1,ip:1,arb:1,intl:3,tax:1,tech:1,data:1,ai:0,ent:0,env:2,fin:1,comp:1,gen:2},ins:'QS全球#20，国际法/公法权威，毗邻联邦政府，公务员/外交方向理想。'},
+  {name:'U Toronto',prog:'LLM',c:'🇨🇦 Toronto',cost:42,bd:false,be:false,bn:null,jd:false,pr:79,wp:1,reg:['ca'],g:['open','china_firm','inhouse','academic'],t:['t1','t2','t3','t4'],lang:{toefl:93,ielts:6.5},sp:{corp:2,ip:1,arb:1,intl:2,tax:1,tech:1,data:1,ai:1,ent:1,env:1,fin:2,comp:2,gen:3},ins:'QS#17加拿大第一，PGWP最长3年，PR路径强。'},
+  {name:'McGill',prog:'LLM / BCL-LLM Joint',c:'🇨🇦 Montreal',cost:18,bd:false,be:false,bn:null,jd:false,pr:76,wp:0,reg:['ca'],g:['open','academic','china_firm'],t:['t1','t2','t3','t4'],lang:{toefl:90,ielts:6.5},sp:{corp:1,ip:1,arb:1,intl:3,tax:1,tech:1,data:1,ai:0,ent:0,env:1,fin:1,comp:2,gen:2},ins:'QS#41，双语BCL/JD，国际法/竞争法知名，学费最低之一，PGWP可申。'},
+  {name:'UBC Allard Law',prog:'LLM',c:'🇨🇦 Vancouver',cost:36,bd:false,be:false,bn:null,jd:false,pr:72,wp:0,reg:['ca'],g:['open','china_firm'],t:['t2','t3','t4'],lang:{toefl:90,ielts:6.5},sp:{corp:1,ip:1,arb:0,intl:2,tax:0,tech:1,data:1,ai:0,ent:0,env:3,fin:0,comp:0,gen:2},ins:'QS#38，环境法全加拿大最强，PGWP可申。'},
+  {name:'Osgoode Hall (York)',prog:'LLM — 16 Specializations',c:'🇨🇦 Toronto',cost:34,bd:false,be:false,bn:null,jd:false,pr:68,wp:1,reg:['ca'],g:['open','inhouse'],t:['t2','t3','t4'],lang:{toefl:90,ielts:6.5},sp:{corp:2,ip:1,arb:1,intl:1,tax:1,tech:1,data:1,ai:0,ent:2,fin:2,env:1,comp:1,gen:3},ins:'加拿大专项最多（16个方向），多伦多就业网络强，PGWP可申。'},
+  {name:'Tilburg Law School',prog:'LLM — Law and Technology',c:'🇳🇱 Netherlands',cost:18,bd:false,be:false,bn:null,jd:false,pr:68,wp:0,reg:['uk'],g:['open','inhouse'],t:['t3','t4'],lang:{toefl:80,ielts:6.5},sp:{corp:0,ip:2,arb:0,intl:1,tax:0,tech:3,data:3,ai:2,ent:0,env:0,fin:0,comp:1,gen:1},ins:'欧洲GDPR/数据保护法研究权威，全数据库学费最低，适合欧洲数据合规方向。'},
+];
+
+/* ── WORK INSIGHT ── */
+function getWorkInsight(){
+  if(S.workStatus!=='working'||!S.workYears||!S.workIndustry)return[];
+  const yr=parseInt(S.workYears)||0;const ind=S.workIndustry;const tips=[];
+  if(ind==='finance'||ind==='consulting')tips.push({n:'金融/咨询背景大加分',s:['Penn（沃顿Certificate）','LSE（金融监管）','Columbia（公司法）']});
+  if(ind==='law_firm'){if(yr>=2)tips.push({n:'2年+律所经验：顶级项目竞争力大幅提升',s:['Harvard','U Chicago','Stanford','Michigan']});else tips.push({n:'1年律所经验：T6竞争力仍强',s:['Columbia','NYU','Georgetown']});}
+  if(ind==='tech')tips.push({n:'科技行业背景极受欢迎',s:['Cornell Tech（科技首选）','Stanford','Berkeley（AI/Tech）']});
+  if(ind==='govt')tips.push({n:'政府/司法背景：政策导向学校加分',s:['Georgetown（DC政策#1）','NYU（国际法/公益）','ANU（公法/外交）']});
+  if(ind==='inhouse_co')tips.push({n:'企业法务经验受商法学校青睐',s:['Penn（商法+沃顿）','Columbia（公司法）','Melbourne']});
+  if(ind==='academia')tips.push({n:'学术背景：研究型项目优势显著',s:['Oxford','Cambridge','Harvard（学术申请）']});
+  if(yr>=4&&!tips.length)tips.push({n:S.workYears+'年经验显著提升顶级项目竞争力',s:['Harvard','U Chicago','Stanford','Michigan']});
+  return tips;
+}
+
+/* ── SCORING ── */
+function wkScore(p){if(S.workStatus==='fresh')return 0;const yr=parseInt(S.workYears)||0;const pref=p.wp||0;if(pref===0)return 0;if(pref===1)return yr>=1?4:0;if(pref===2)return yr>=2?8:yr>=1?3:-4;if(pref===3)return yr>=2?12:yr>=1?2:-8;return 0;}
+function indBonus(p){if(!S.workIndustry||S.workStatus==='fresh')return 0;const ind=S.workIndustry;let b=0;if(ind==='finance'&&(p.sp.corp>=2||p.sp.fin>=2))b+=4;if(ind==='tech'&&(p.sp.tech>=2||p.sp.ai>=2||p.sp.data>=2))b+=4;if(ind==='law_firm')b+=2;if(ind==='govt'&&p.name.includes('Georgetown'))b+=5;if(ind==='govt'&&p.name.includes('ANU'))b+=4;return b;}
+function spScore(p,sid){if(!sid||sid==='gen')return 8;const s=p.sp[sid]||0;if(s===3)return 20;if(s===2)return 12;if(s===1)return 5;return -8;}
+function spLabel(sc){if(sc===3)return{c:'sf',t:'⭐ 专项旗舰'};if(sc===2)return{c:'sm',t:'✦ 专项强校'};return null;}
+function langOK(p){if(!S.langType||S.langScore===null||S.langType==='none')return true;const req=p.lang[S.langType];if(req===null)return false;if(req===undefined)return true;return S.langScore>=req;}
+function langMsg(p){if(!S.langType||S.langScore===null||S.langType==='none')return null;const req=p.lang[S.langType];if(req===null)return'✗ '+S.langType.toUpperCase()+' 不被接受（仅TOEFL）';if(req===undefined)return null;if(S.langScore>=req)return'✓ '+S.langType.toUpperCase()+' '+fmtS(S.langScore,S.langType)+' 达线';return'✗ 需'+S.langType.toUpperCase()+' '+req+'（差'+(req-S.langScore).toFixed(1)+'）';}
+function computeResults(){const aR=S.regions.filter(r=>r!=='any');const tier=S.schoolTier||'t4';return P.map(p=>{let sc=0;if(p.g.includes(S.goal))sc+=24;if(S.goal==='bar'&&p.be&&!p.bd)sc+=10;if(p.cost<=S.budget*1.05)sc+=16;else if(p.cost<=S.budget*1.3)sc+=6;if(p.t.includes(tier))sc+=12;else if(tier==='t4'&&p.t.includes('t3'))sc+=5;if(aR.length===0||S.regions.includes('any')||p.reg.some(r=>aR.includes(r)))sc+=16;sc+=spScore(p,S.specialty);sc+=wkScore(p);sc+=indBonus(p);if(S.langType&&S.langScore!==null&&S.langType!=='none'){if(langOK(p))sc+=8;else sc-=20;}return{...p,score:sc};}).sort((a,b)=>b.score-a.score).filter(p=>p.score>0).slice(0,6);}
+
+/* ── HELPERS ── */
+function rL(v){if(v<=15)return'≤15万/年';if(v<=20)return'约20万/年';if(v<=25)return'约25万/年';if(v<=30)return'约30万/年';if(v<=35)return'约35万/年';if(v<=40)return'约40万/年';if(v<=50)return'约50万/年';if(v<=60)return'约60万/年';if(v<=70)return'约70万/年';if(v<=80)return'约80万/年';if(v<=100)return'约100万/年';return'120万+/年';}
+function rU(v){return'≈ USD '+Math.round(v*0.137)+'K/yr';}
+function rP(v){return Math.round((v-15)/105*100);}
+function lCfg(){if(S.langType==='toefl')return{min:60,max:120,step:1,label:'TOEFL iBT',low:'60',high:'120'};return{min:4.0,max:9.0,step:0.5,label:'IELTS Academic',low:'4.0',high:'9.0'};}
+function dLS(t){return t==='toefl'?100:7.0;}
+function fmtS(v,t){return t==='ielts'?parseFloat(v).toFixed(1):Math.round(v);}
+function sPct(v,t){return t==='toefl'?Math.round((v-60)/60*100):Math.round((v-4)/5*100);}
+function wkSum(){if(!S.workStatus)return'—';if(S.workStatus==='fresh')return'应届';const y=S.workYears||'?';const ind=inds.find(i=>i.id===S.workIndustry)?.l||'';return y+'年·'+ind;}
+function stSum(i){const sch=SCHOOLS.find(s=>s.id===S.schoolId);return[S.goal?goals.find(g=>g.id===S.goal)?.main.slice(0,14):'—',sch?sch.n+'('+sch.e+')'  :'—',rL(S.budget),S.regions.length?S.regions.map(r=>regionOpts.find(o=>o.id===r)?.l.split(' ')[0]).join(' '):'—',specs.find(s=>s.id===S.specialty)?.l||'—',wkSum(),S.langType?(S.langType==='none'?'未考试':S.langType.toUpperCase()+' '+(S.langScore||'?')):'—'][i]||'—';}
+function bcH(){if(S.step===0)return'';let h='<div class="bc fade">';for(let i=0;i<STEPS;i++){const d=i<S.step,cu=i===S.step;const col=d?'#7c6f5a':cu?'#1a1916':'#c8c4bc';const fw=cu?'500':'400';const oc=d?'onclick="jTo('+i+')"':'';h+=`<button ${oc} style="background:none;border:none;font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:${col};font-weight:${fw};cursor:${d?'pointer':'default'};padding:2px 4px;border-radius:3px;">${d?stSum(i).slice(0,12):stepLabels[i]}</button>`;if(i<STEPS-1)h+=`<span style="font-size:9px;color:#c8c4bc;padding:0 1px">›</span>`;}return h+'</div>';}
+function ecH(){return'<div class="edit-row fade">'+stepLabels.map((l,i)=>`<button class="edit-chip" onclick="jTo(${i})"><span class="edit-chip-dot"></span>${stSum(i).slice(0,14)}</button>`).join('')+'</div>';}
+function leH(){if(!S.langType||S.langScore===null||S.langType==='none')return'';const rows=P.slice(0,7).map(p=>{const req=p.lang[S.langType];let cl,tx;if(req===null){cl='ew';tx='不接受此考试';}else if(req===undefined){cl='en';tx='未列出';}else if(S.langScore>=req){cl='eg';tx='✓(min '+req+')';}else{cl='ew';tx='✗需'+req;}return`<div class="elig-row"><span class="es">${p.name.slice(0,16)}</span><span class="${cl}">${tx}</span></div>`;}).join('');return`<div class="lang-elig"><div class="lang-elig-title">快速达线检查</div>${rows}</div>`;}
+
+function fbCardH(name){
+  const id=name.replace(/[^a-z0-9]/gi,'_');
+  if(S.flagSent[id])return`<div class="rc-fb"><span class="flag-sent-msg">✓ 感谢反馈，已发送到作者邮箱</span></div>`;
+  const up=S.thumbs[id]==='up',dn=S.thumbs[id]==='down';
+  let h=`<div class="rc-fb"><span class="rc-fb-label">有帮助？</span><button class="thumb-btn up${up?' active':''}" onclick="setTh('${id}','up','${name}')">👍</button><button class="thumb-btn down${dn?' active':''}" onclick="setTh('${id}','down','${name}')">👎</button><button class="flag-btn" onclick="togFlag('${id}')">⚑ 反映问题</button></div>`;
+  if(S.flagOpen[id])h+=`<div style="margin-top:7px"><textarea class="fp-field" rows="2" placeholder="哪里有误？请描述问题" oninput="S.flagText['${id}']=this.value">${S.flagText[id]||''}</textarea><button class="btn-flag-sub" onclick="subFlag('${id}','${name}')">提交</button><button class="btn-flag-can" onclick="togFlag('${id}')">取消</button></div>`;
+  return h;
+}
+
+function fbPanelH(){
+  if(S.fpSent)return`<div class="fb-panel fade"><div class="fp-sent"><div class="fp-sent-icon">✉️</div><div class="fp-sent-title">反馈已发送</div><div class="fp-sent-sub">谢谢！我们会持续改进数据。</div></div></div>`;
+  const tabs=[{id:'overall',l:'整体体验'},{id:'data',l:'数据准确性'},{id:'missing',l:'缺少项目'}];
+  const ph={overall:'使用体验如何？有什么建议？',data:'哪个项目数据有误？请说明。',missing:'哪个LLM项目应该加入？请提供学校名称。'};
+  const stars=[1,2,3,4,5].map(n=>`<span class="star${n<=(S.fpHover||S.fpStars)?' on':''}" onmouseover="fpH(${n})" onmouseout="fpH(0)" onclick="fpSt(${n})">★</span>`).join('');
+  return`<div class="fb-panel fade"><div class="fp-title">分享反馈</div><div class="fp-sub">你的反馈会直接发送给作者，帮助持续改进。</div><div class="fp-tabs">${tabs.map(t=>`<button class="fp-tab${S.fpTab===t.id?' on':''}" onclick="fpTab('${t.id}')">${t.l}</button>`).join('')}</div>${S.fpTab==='overall'?`<div class="fp-star-row">${stars}</div>`:''}<textarea class="fp-field" rows="3" placeholder="${ph[S.fpTab]}" oninput="S.fpText=this.value">${S.fpText}</textarea><div class="fp-row"><button class="btn-next" style="padding:8px 16px;font-size:11px" onclick="fpSub()" id="fp-send-btn">发送反馈</button><label class="fp-anon"><input type="checkbox" checked> 匿名</label></div></div>`;
+}
+
+const bkSVG=`<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+/* ── RENDER ── */
+function render(){
+  const el=document.getElementById('root');if(!el)return;
+  const pct=Math.round((S.step/STEPS)*100);
+  let h=`<div class="prog-wrap fade"><div class="prog-label"><span>LLM Compass · ${P.length}个项目</span><span>${S.step<STEPS?'第'+(S.step+1)+'步/共'+STEPS+'步':'匹配结果'}</span></div><div class="prog-track"><div class="prog-fill" style="width:${S.step===STEPS?100:pct}%"></div></div></div>${bcH()}`;
+
+  if(S.step===0){
+    h+=`<div class="step-num fade">Goal · 目标方向</div><div class="step-q fade d1">你最希望通过LLM <em>实现什么</em>？</div><div class="step-hint fade d1">答案决定推荐项目、地区和策略。</div><div class="options fade d1">${goals.map(g=>`<button class="opt${S.goal===g.id?' sel':''}" onclick="pick('goal','${g.id}')"><span class="opt-icon">${g.icon}</span><span class="opt-text"><span class="opt-main">${g.main}</span><span class="opt-sub">${g.sub}</span></span></button>`).join('')}</div><div class="nav fade d2"><button class="btn-next" ${!S.goal?'disabled':''} onclick="nx()">继续 →</button></div>`;
+  }else if(S.step===1){
+    const fl=SCHOOLS.filter(s=>S.ss===''||s.n.includes(S.ss)||s.e.toLowerCase().includes(S.ss.toLowerCase()));
+    h+=`<div class="step-num fade">Background · 就读院校</div><div class="step-q fade d1">你在哪所大学读的 <em>法学本科</em>？</div><div class="step-hint fade d1">按软科2025排名。</div><input class="school-search fade" placeholder="搜索中文名或英文缩写…" value="${S.ss}" oninput="sS(this.value)"><div class="school-grid fade d1">${fl.map(s=>`<button class="school-pill${S.schoolId===s.id?' sel':''}" onclick="pSch('${s.id}','${s.t}')">${s.r<99?'#'+s.r+' ':''}${s.n}<span class="school-tier-label">${s.e} · ${TL[s.t]}</span></button>`).join('')}</div><div class="nav fade d2"><button class="btn-back" onclick="bk()">${bkSVG} 上一步</button><button class="btn-next" ${!S.schoolId?'disabled':''} onclick="nx()">继续 →</button></div>`;
+  }else if(S.step===2){
+    h+=`<div class="step-num fade">Budget · 年度总预算</div><div class="step-q fade d1">你的 <em>年度总预算</em>？</div><div class="step-hint fade d1">学费 + 生活费合计（人民币）。</div><div class="slider-wrap fade d1"><div class="budget-val" id="bv">${rL(S.budget)}</div><div class="budget-usd" id="bu">${rU(S.budget)}</div><input type="range" class="custom" id="bs" min="15" max="120" step="5" value="${S.budget}" style="--pct:${rP(S.budget)}%" oninput="upB(this.value)"><div class="slider-labels"><span>15万/年</span><span>120万+/年</span></div></div><div class="nav fade d2"><button class="btn-back" onclick="bk()">${bkSVG} 上一步</button><button class="btn-next" onclick="nx()">继续 →</button></div>`;
+  }else if(S.step===3){
+    h+=`<div class="step-num fade">Regions · 目标地区</div><div class="step-q fade d1">你愿意考虑哪些 <em>留学目的地</em>？</div><div class="step-hint fade d1">可多选。</div><div class="opt-grid fade d1">${regionOpts.map(r=>`<button class="opt-pill${S.regions.includes(r.id)?' sel':''}" onclick="togR('${r.id}')">${r.l}<span class="opt-pill-en">${r.e}</span></button>`).join('')}</div><div class="nav fade d2"><button class="btn-back" onclick="bk()">${bkSVG} 上一步</button><button class="btn-next" ${S.regions.length===0?'disabled':''} onclick="nx()">继续 →</button></div>`;
+  }else if(S.step===4){
+    const sel=specs.find(s=>s.id===S.specialty);const hints=S.specialty?SPEC_HINTS[S.specialty]||[]:[];
+    h+=`<div class="step-num fade">Specialty · 专业方向</div><div class="step-q fade d1">你有特别感兴趣的 <em>法律方向</em>？</div><div class="step-hint fade d1">选择后系统基于各学校实际优势精准匹配。</div><div class="spec-grid fade d1">${specs.map(s=>`<button class="spec-pill${S.specialty===s.id?' sel':''}" onclick="pick('specialty','${s.id}')">${s.l}${s.n?`<span class="spec-new">NEW</span>`:''}<span class="spec-pill-en">${s.e}</span></button>`).join('')}</div>`;
+    if(S.specialty&&hints.length)h+=`<div class="spec-hint-box fade d2"><div class="sht">📌 ${sel?.l} 方向顶校</div>${hints.map(s=>`<span class="sh-tag">${s}</span>`).join('')}</div>`;
+    h+=`<div class="nav fade d2"><button class="btn-back" onclick="bk()">${bkSVG} 上一步</button><button class="btn-next" ${!S.specialty?'disabled':''} onclick="nx()">继续 →</button></div>`;
+  }else if(S.step===5){
+    const wi=getWorkInsight();
+    h+=`<div class="step-num fade">工作经历 · Work Experience</div><div class="step-q fade d1">你目前的 <em>工作状态</em>？</div><div class="step-hint fade d1">部分学校明显偏好有工作经验的申请者，影响匹配结果。</div><div class="wcard fade d1"><div class="wsec"><span class="wlbl">工作状态</span><div class="opt-grid" style="margin-bottom:0"><button class="opt-pill${S.workStatus==='fresh'?' sel':''}" onclick="pW('workStatus','fresh')">🎓 应届生<span class="opt-pill-en">Fresh Graduate</span></button><button class="opt-pill${S.workStatus==='working'?' sel':''}" onclick="pW('workStatus','working')">💼 已有工作经验<span class="opt-pill-en">Have Work Experience</span></button></div></div>`;
+    if(S.workStatus==='working'){h+=`<div class="wsec" style="margin-top:12px"><span class="wlbl">工作年限</span><div class="yrs-grid">${['1','2-3','4-5','6+'].map(y=>`<button class="yr-pill${S.workYears===y?' sel':''}" onclick="pW('workYears','${y}')">${y}年</button>`).join('')}</div></div><div class="wsec" style="margin-top:12px"><span class="wlbl">所在行业</span><div class="ind-grid">${inds.map(ind=>`<button class="ind-pill${S.workIndustry===ind.id?' sel':''}" onclick="pW('workIndustry','${ind.id}')">${ind.l}<br><span style="font-size:9px;color:#b8b0a0">${ind.e}</span></button>`).join('')}</div></div>`;}
+    h+=`</div>`;
+    if(wi.length){h+=`<div class="work-insight fade d2">`;wi.forEach(tip=>{h+=`<div class="wi-title">🎯 ${tip.n}</div><div style="margin-bottom:7px">${tip.s.map(s=>`<span class="ws-tag">${s}</span>`).join('')}</div>`;});h+=`</div>`;}
+    const ok=S.workStatus==='fresh'||(S.workStatus==='working'&&S.workYears&&S.workIndustry);
+    h+=`<div class="nav fade d2"><button class="btn-back" onclick="bk()">${bkSVG} 上一步</button><button class="btn-next" ${!ok?'disabled':''} onclick="nx()">继续 →</button></div>`;
+  }else if(S.step===6){
+    const cfg=S.langType&&S.langType!=='none'?lCfg():null;const cur=S.langScore;
+    h+=`<div class="step-num fade">Language · 语言成绩</div><div class="step-q fade d1">你的 <em>英语考试成绩</em>？</div><div class="step-hint fade d1">注意：哈佛法学院只接受TOEFL（最低100分，四项各≥25），不接受雅思。</div><div class="lang-wrap fade d1"><div class="lang-tabs"><button class="lang-tab${S.langType==='toefl'?' sel':''}" onclick="sL('toefl')">TOEFL iBT</button><button class="lang-tab${S.langType==='ielts'?' sel':''}" onclick="sL('ielts')">雅思 IELTS</button><button class="lang-tab${S.langType==='none'?' sel':''}" onclick="sL('none')">尚未考 / 跳过</button></div>`;
+    if(cfg){h+=`<div style="font-size:10px;color:#9a9588;margin-bottom:5px">${cfg.label}</div><div class="score-val" id="sv">${fmtS(cur!==null?cur:dLS(S.langType),S.langType)}</div><input type="range" class="custom" id="ls" min="${cfg.min}" max="${cfg.max}" step="${cfg.step}" value="${cur!==null?cur:dLS(S.langType)}" style="--pct:${sPct(cur!==null?cur:dLS(S.langType),S.langType)}%" oninput="upL(this.value)"><div class="score-range-labels"><span>${cfg.low}</span><span>${cfg.high}</span></div>`;if(S.langType==='ielts')h+=`<div class="toefl-note">⚠️ 哈佛LLM不接受雅思，仅TOEFL≥100（四项各≥25）。如目标含哈佛，须参加TOEFL。</div>`;h+=leH();}else{h+=`<div style="font-size:11px;color:#9a9588;padding:5px 0">请选择考试类型，或跳过继续。</div>`;}
+    h+=`</div><div class="nav fade d2"><button class="btn-back" onclick="bk()">${bkSVG} 上一步</button><button class="btn-next" ${!S.langType?'disabled':''} onclick="sR()">查看匹配结果 →</button></div>`;
+  }else if(S.step===STEPS){
+    const res=computeResults();const sch=SCHOOLS.find(s=>s.id===S.schoolId);const spTxt=specs.find(s=>s.id===S.specialty)?.l||'';const wkTxt=wkSum();
+    if(res.length===0){
+      h+=`<div class="fade"><div class="step-num">匹配结果</div><div class="step-q">暂无完全匹配</div><div class="step-hint">请调整筛选条件，例如放宽预算或地区范围。</div>${ecH()}</div><div class="nav fade"><button class="btn-back" onclick="rs()">${bkSVG} 重新开始</button></div>`;
+    }else{
+      h+=`<div class="fade"><div class="step-num">匹配结果 · Your Matches</div><div class="step-q" style="margin-bottom:5px">你的最佳 <em>LLM 项目</em></div><div class="results-meta">院校：<strong>${sch?sch.n:''}</strong>（${sch?TL[sch.t]:''}）· 方向：${spTxt} · 工作：${wkTxt}</div>${ecH()}</div>`;
+      res.forEach((p,i)=>{
+        const lm=langMsg(p);const lc=lm?(lm.startsWith('✓')?'info':'warn'):null;
+        const spSc=S.specialty?p.sp[S.specialty]||0:0;const sl=spLabel(spSc);
+        const isWP=S.workStatus==='working'&&p.wp>=2;const hasExtra=p.be&&!p.bd;
+        h+=`<div class="result-card${i===0?' top':''} fade" style="animation-delay:${i*.07}s"><div class="rc-head"><div><div class="rc-rank">${i===0?'最佳匹配':'第'+(i+1)+'名'}</div><div class="rc-name">${p.name}</div><div class="rc-prog">${p.prog}</div><div class="rc-country">${p.c}</div></div><div><div class="rc-score">${p.score}</div><div class="rc-score-label">匹配分</div></div></div><div class="rc-body"><div class="rc-tags">${p.bd?`<span class="rc-tag good">Bar ✓ US eligible</span>`:''} ${hasExtra?`<span class="rc-tag bar-extra">Bar* 额外学分可考</span>`:''} ${p.jd?`<span class="rc-tag good">LLM→JD</span>`:''}<span class="rc-tag">约${p.cost}万/年</span><span class="rc-tag good">声誉${p.pr}</span>${sl?`<span class="rc-tag ${sl.c}">${sl.t}</span>`:''} ${isWP?`<span class="rc-tag wp">⭐ 偏好工作党</span>`:''} ${lm?`<span class="rc-tag ${lc}">${lm}</span>`:''}</div>${hasExtra&&p.bn?`<div class="bar-note-box">ℹ️ ${p.bn}</div>`:''}<div class="rc-insight">${p.ins}</div>${fbCardH(p.name)}</div></div>`;
+      });
+      h+=`<div class="nav fade" style="animation-delay:.4s"><button class="btn-back" onclick="rs()">${bkSVG} 重新开始</button></div>${fbPanelH()}`;
+    }
+  }
+  el.innerHTML=h;
+}
+
+/* ── ACTIONS ── */
+function pick(k,v){S[k]=v;render();}
+function pW(k,v){S[k]=v;if(k==='workStatus'&&v==='fresh'){S.workYears=null;S.workIndustry=null;}render();}
+function pSch(id,t){S.schoolId=id;S.schoolTier=t;render();}
+function sS(v){S.ss=v;render();}
+function togR(id){if(id==='any'){S.regions=['any'];render();return;}S.regions=S.regions.filter(r=>r!=='any');const i=S.regions.indexOf(id);if(i>-1)S.regions.splice(i,1);else S.regions.push(id);render();}
+function upB(v){S.budget=+v;const bv=document.getElementById('bv'),bu=document.getElementById('bu'),bs=document.getElementById('bs');if(bv)bv.textContent=rL(+v);if(bu)bu.textContent=rU(+v);if(bs)bs.style.setProperty('--pct',rP(+v)+'%');}
+function sL(t){S.langType=t;if(t==='none'){S.langScore=null;}else if(S.langScore===null){S.langScore=dLS(t);}else{if(t==='ielts'&&S.langScore>9)S.langScore=dLS('ielts');if(t==='toefl'&&S.langScore<=9)S.langScore=dLS('toefl');}render();}
+function upL(v){S.langScore=parseFloat(v);const sv=document.getElementById('sv'),ls=document.getElementById('ls');if(sv)sv.textContent=fmtS(+v,S.langType);if(ls)ls.style.setProperty('--pct',sPct(+v,S.langType)+'%');const eli=document.querySelector('.lang-elig');if(eli){const nh=leH();if(nh)eli.outerHTML=nh;}}
+function nx(){S.step=Math.min(S.step+1,STEPS);render();}
+function bk(){S.step=Math.max(0,S.step-1);render();}
+function jTo(i){S.step=i;render();}
+function sR(){S.step=STEPS;render();}
+function rs(){S.step=0;S.goal=null;S.schoolId=null;S.schoolTier=null;S.budget=50;S.regions=[];S.specialty=null;S.workStatus=null;S.workYears=null;S.workIndustry=null;S.langType=null;S.langScore=null;S.ss='';S.thumbs={};S.flagOpen={};S.flagSent={};S.flagText={};S.fpTab='overall';S.fpStars=0;S.fpHover=0;S.fpText='';S.fpSent=false;render();}
+
+function setTh(id,v,name){
+  S.thumbs[id]=v;
+  sendFeedback({type:'卡片'+（v==='up'?'👍':'👎'),school:name,content:v==='up'?'用户点赞':'用户点踩',profile:getUserProfile()});
+  render();
+}
+function togFlag(id){S.flagOpen[id]=!S.flagOpen[id];render();}
+function subFlag(id,name){
+  const txt=S.flagText[id]||'';
+  if(!txt.trim())return;
+  sendFeedback({type:'⚑ 数据问题反馈',school:name,content:txt,profile:getUserProfile()});
+  S.flagSent[id]=true;S.flagOpen[id]=false;render();
+}
+function fpTab(t){S.fpTab=t;S.fpText='';render();}
+function fpH(n){S.fpHover=n;document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<(n||S.fpStars)));}
+function fpSt(n){S.fpStars=n;render();}
+function fpSub(){
+  if(!S.fpText.trim()&&S.fpStars===0)return;
+  const tabLabel={overall:'整体体验',data:'数据准确性',missing:'缺少项目'}[S.fpTab]||S.fpTab;
+  sendFeedback({type:'📝 '+tabLabel,school:'—',content:S.fpText,stars:S.fpStars||null,profile:getUserProfile()});
+  S.fpSent=true;render();
+}
+
+render();
+</script>
+</body>
+</html>
