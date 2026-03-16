@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0056)file:///C:/Users/hongbo.hei/Downloads/llm-compass_4.html -->
+<!-- saved from url=(0056)file:///C:/Users/hongbo.hei/Downloads/llm-compass_5.html -->
 <html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,13 +13,7 @@ body{font-family:'DM Sans',sans-serif;background:#f7f5f0;color:#1a1916;min-heigh
 .app{padding:2rem 3rem 5rem;width:100%;max-width:900px;margin:0 auto;}
 .inner{max-width:100%;margin:0 auto;}
 
-/* Font widget */
-.font-widget{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;align-items:center;gap:5px;background:#fff;border:1.5px solid #c8c4bc;border-radius:12px;padding:10px 9px;box-shadow:0 4px 18px rgba(0,0,0,.13);}
-.font-widget-lbl{font-size:10px;color:#9a9588;letter-spacing:.06em;text-transform:uppercase;}
-.fnt-btn{width:30px;height:30px;border:1.5px solid #e0ddd6;border-radius:7px;background:#f7f5f0;cursor:pointer;font-weight:700;color:#4a3e2e;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:sans-serif;}
-.fnt-btn:hover{border-color:#7c6f5a;background:#f0ece3;}
-.fnt-slider{-webkit-appearance:slider-vertical;appearance:slider-vertical;width:22px;height:80px;cursor:pointer;accent-color:#7c6f5a;}
-.fnt-val{font-size:11px;color:#7c6f5a;font-weight:600;}
+
 
 /* Nav */
 .top-nav{display:flex;gap:10px;margin-bottom:1.75rem;}
@@ -193,13 +187,6 @@ input[type=range].custom::-webkit-slider-thumb{-webkit-appearance:none;width:20p
 <div class="matcher on" id="view-matcher"><div id="root"><div class="prog-wrap fade"><div class="prog-label"><span>LLM Compass · 34个项目</span><span>第1步/共7步</span></div><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div></div><div class="step-num fade">Goal · 目标方向</div><div class="step-q fade d1">你最希望通过LLM <em>实现什么</em>？</div><div class="step-hint fade d1">答案决定推荐项目、地区和策略。</div><div class="options fade d1"><button class="opt" onclick="pick(&#39;goal&#39;,&#39;bar&#39;)"><span class="opt-icon">⚖️</span><span class="opt-text"><span class="opt-main">Qualify as a lawyer in a US state</span><span class="opt-sub">美国某州律师资格 · 留美发展</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;llm2jd&#39;)"><span class="opt-icon">🎓</span><span class="opt-text"><span class="opt-main">LLM with potential transfer to JD</span><span class="opt-sub">LLM转JD · 长期留美路径</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;china_firm&#39;)"><span class="opt-icon">🏢</span><span class="opt-text"><span class="opt-main">Return to China — law firm</span><span class="opt-sub">回国 · 内所/外资所中国办公室</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;inhouse&#39;)"><span class="opt-icon">💼</span><span class="opt-text"><span class="opt-main">Return to China — in-house legal</span><span class="opt-sub">回国 · 企业法务 · 跨国公司法务部</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;civil&#39;)"><span class="opt-icon">📋</span><span class="opt-text"><span class="opt-main">Return to China — civil service</span><span class="opt-sub">回国考公 · 政府机关 · 涉外单位</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;academic&#39;)"><span class="opt-icon">📚</span><span class="opt-text"><span class="opt-main">Academic / PhD track</span><span class="opt-sub">学术 · SJD/JSD · 英美港新欧博士</span></span></button><button class="opt" onclick="pick(&#39;goal&#39;,&#39;open&#39;)"><span class="opt-icon">🌐</span><span class="opt-text"><span class="opt-main">Keep all options open</span><span class="opt-sub">方向未定 · 综合考量</span></span></button></div><div class="nav fade d2"><button class="btn-next" disabled="" onclick="nx()">继续 →</button></div></div></div>
 </div></div>
 
-<div class="font-widget">
-  <span class="font-widget-lbl">字体</span>
-  <button class="fnt-btn" onclick="adjFont(1)">+</button>
-  <input type="range" class="fnt-slider" id="font-slider" min="12" max="22" step="1" value="15" oninput="setFont(this.value)">
-  <button class="fnt-btn" onclick="adjFont(-1)">−</button>
-  <span class="fnt-val" id="font-size-label">15px</span>
-</div>
 
 <script>
 /* ── FEEDBACK ENDPOINT ── */
@@ -548,19 +535,7 @@ function fpSub(){
 }
 
 /* ── FONT SIZE ── */
-let currentFont=15;
-function setFont(v){
-  currentFont=parseInt(v);
-  // Apply to html element so all rem/em inherit correctly
-  document.documentElement.style.fontSize=currentFont+'px';
-  document.body.style.fontSize=currentFont+'px';
-  document.querySelector('.app').style.fontSize=currentFont+'px';
-  const sl=document.getElementById('font-slider');
-  const lb=document.getElementById('font-size-label');
-  if(sl) sl.value=currentFont;
-  if(lb) lb.textContent=currentFont+'px';
-}
-function adjFont(d){setFont(Math.min(22,Math.max(12,currentFont+d)));}
+
 
 render();
 </script>
