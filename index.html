@@ -227,11 +227,11 @@ function sv(v){
 
 /* ── TIER GUIDE ── */
 const TC=[
-  {id:'cn',flag:'🇨🇳',label:'中国',src:'软科2025',tiers:[
-    {b:'tb1',l:'第一档 T1',r:'哈佛/耶鲁可冲',n:'软科前5。中政A+。',s:['1.中国政法','2.人大','3.武汉大学','4.北京大学','5.华东政法']},
-    {b:'tb2',l:'第二档 T2',r:'T6–T14竞争力',n:'前13。清华接近T1，SJTU/Fudan外资所认可高。',s:['6.西南政法','7.清华','8.吉林','9.上海交大','10.中南财经政法','11.复旦','12.西北政法','13.对外经贸']},
-    {b:'tb3',l:'第三档 T3',r:'T14–T30·UK/HK/AU',n:'14–25名。语言和GPA权重更大。',s:['14.南京大学','15.浙大','16.北师大','17.厦大','18.中山','19.山大','20.北航','21.南开','22.华科','23.中国海洋','24.上海政法','25.苏州大学']},
-    {b:'tb4',l:'第四档 T4',r:'经历可弥补',n:'25名外。魔圈/V10实习+工作经验大幅弥补院校劣势。',s:['25名外各院校','省属重点','财经类院校']},
+  {id:'cn',flag:'🇨🇳',label:'中国',src:'教育部第四轮学科评估',tiers:[
+    {b:'tb1',l:'A+ 顶尖',r:'哈佛/耶鲁可冲',n:'教育部A+（共7所，第五轮院校自披露）。顶海外名校竞争力最强。',s:['中国政法大学','中国人民大学','北京大学','清华大学','华东政法大学','武汉大学','西南政法大学']},
+    {b:'tb2',l:'A- 强校',r:'T6–T14竞争力',n:'教育部A-（7所）。外资所认可度高，名校申请仍具竞争力。',s:['对外经贸大学','吉林大学','上海交通大学','南京大学','浙江大学','厦门大学','中南财经政法']},
+    {b:'tb3',l:'B+ 次强',r:'T14–T30·UK/HK/AU',n:'教育部B+（14所）。语言成绩和工作经历权重更大，建议冲刺中等梯队项目。',s:['复旦大学','北师大','北航','南开大学','苏州大学','山东大学','中山大学','四川大学','重庆大学','辽宁大学','西北政法大学','南京师范大学','中南大学','北京航空航天']},
+    {b:'tb4',l:'B及以下',r:'经历可弥补',n:'B及以下。魔圈/V10实习、工作经验、高语言成绩可大幅弥补院校背景。',s:['B类院校','省属重点','财经类院校']},
   ]},
   {id:'us',flag:'🇺🇸',label:'美国',src:'U.S. News 2025',tiers:[
     {b:'tb1',l:'T3 (HYS)',r:'全球品牌',n:'Stanford/Yale #1，Harvard #6（仅TOEFL≥100）。Stanford强烈偏好2年+律所/科技经验。',s:['Yale #1','Stanford #1（科技/IP，偏工作党）','Harvard #6（TOEFL only）']},
@@ -290,20 +290,35 @@ function buildTG(){
 buildTG();
 
 /* ── DATA ── */
+// moe: 教育部第四轮法学学科评估等级（第五轮结果不公开）
+// A+参考第五轮院校自披露：CUPL/RUC/PKU/THU/ECUPL/WHU/SWUPL 均升至A+
 const SCHOOLS=[
-  {id:'cupl',n:'中国政法大学',e:'CUPL',t:'t1',r:1},{id:'ruc',n:'中国人民大学',e:'RUC',t:'t1',r:2},
-  {id:'whu',n:'武汉大学',e:'WHU',t:'t1',r:3},{id:'pku',n:'北京大学',e:'PKU',t:'t1',r:4},
-  {id:'ecupl',n:'华东政法大学',e:'ECUPL',t:'t1',r:5},{id:'swupl',n:'西南政法大学',e:'SWUPL',t:'t2',r:6},
-  {id:'thu',n:'清华大学',e:'THU',t:'t2',r:7},{id:'jlu',n:'吉林大学',e:'JLU',t:'t2',r:8},
-  {id:'sjtu',n:'上海交通大学',e:'SJTU',t:'t2',r:9},{id:'zuel',n:'中南财经政法',e:'ZUEL',t:'t2',r:10},
-  {id:'fudan',n:'复旦大学',e:'Fudan',t:'t2',r:11},{id:'nwupl',n:'西北政法大学',e:'NWUPL',t:'t2',r:12},
-  {id:'uibe',n:'对外经贸大学',e:'UIBE',t:'t2',r:13},{id:'nju',n:'南京大学',e:'NJU',t:'t3',r:14},
-  {id:'zju',n:'浙江大学',e:'ZJU',t:'t3',r:15},{id:'bnu',n:'北京师范大学',e:'BNU',t:'t3',r:16},
-  {id:'xmu',n:'厦门大学',e:'XMU',t:'t3',r:17},{id:'sysu',n:'中山大学',e:'SYSU',t:'t3',r:18},
-  {id:'sdu',n:'山东大学',e:'SDU',t:'t3',r:19},{id:'buaa',n:'北航',e:'BUAA',t:'t3',r:20},
-  {id:'nku',n:'南开大学',e:'NKU',t:'t3',r:21},{id:'hust',n:'华中科技大学',e:'HUST',t:'t3',r:22},
-  {id:'ouc',n:'中国海洋大学',e:'OUC',t:'t3',r:23},{id:'shupl',n:'上海政法学院',e:'SHUPL',t:'t3',r:24},
-  {id:'szu',n:'苏州大学',e:'SZU',t:'t3',r:25},{id:'t4',n:'其他院校',e:'Outside top 25',t:'t4',r:99},
+  {id:'cupl',n:'中国政法大学',e:'CUPL',t:'t1',r:1,moe:'A+'},
+  {id:'ruc', n:'中国人民大学',e:'RUC', t:'t1',r:2,moe:'A+'},
+  {id:'whu', n:'武汉大学',    e:'WHU', t:'t1',r:3,moe:'A+'},
+  {id:'pku', n:'北京大学',    e:'PKU', t:'t1',r:4,moe:'A+'},
+  {id:'ecupl',n:'华东政法大学',e:'ECUPL',t:'t1',r:5,moe:'A+'},
+  {id:'swupl',n:'西南政法大学',e:'SWUPL',t:'t2',r:6,moe:'A+'},
+  {id:'thu', n:'清华大学',    e:'THU', t:'t2',r:7,moe:'A+'},
+  {id:'jlu', n:'吉林大学',    e:'JLU', t:'t2',r:8,moe:'A-'},
+  {id:'sjtu',n:'上海交通大学',e:'SJTU',t:'t2',r:9,moe:'A-'},
+  {id:'zuel',n:'中南财经政法',e:'ZUEL',t:'t2',r:10,moe:'A-'},
+  {id:'fudan',n:'复旦大学',   e:'Fudan',t:'t2',r:11,moe:'B+'},
+  {id:'nwupl',n:'西北政法大学',e:'NWUPL',t:'t2',r:12,moe:'A-'},
+  {id:'uibe',n:'对外经贸大学',e:'UIBE',t:'t2',r:13,moe:'A-'},
+  {id:'nju', n:'南京大学',    e:'NJU', t:'t3',r:14,moe:'A-'},
+  {id:'zju', n:'浙江大学',    e:'ZJU', t:'t3',r:15,moe:'A-'},
+  {id:'bnu', n:'北京师范大学',e:'BNU', t:'t3',r:16,moe:'B+'},
+  {id:'xmu', n:'厦门大学',    e:'XMU', t:'t3',r:17,moe:'A-'},
+  {id:'sysu',n:'中山大学',    e:'SYSU',t:'t3',r:18,moe:'B+'},
+  {id:'sdu', n:'山东大学',    e:'SDU', t:'t3',r:19,moe:'B+'},
+  {id:'buaa',n:'北航',        e:'BUAA',t:'t3',r:20,moe:'B+'},
+  {id:'nku', n:'南开大学',    e:'NKU', t:'t3',r:21,moe:'B+'},
+  {id:'hust',n:'华中科技大学',e:'HUST',t:'t3',r:22,moe:'B'},
+  {id:'ouc', n:'中国海洋大学',e:'OUC', t:'t3',r:23,moe:'B'},
+  {id:'shupl',n:'上海政法学院',e:'SHUPL',t:'t3',r:24,moe:'B'},
+  {id:'szu', n:'苏州大学',    e:'SZU', t:'t3',r:25,moe:'B+'},
+  {id:'t4',  n:'其他院校',    e:'Outside top 25',t:'t4',r:99,moe:'B及以下'},
 ];
 const TL={t1:'第一档 T1',t2:'第二档 T2',t3:'第三档 T3',t4:'第四档 T4'};
 const STEPS=7;
@@ -411,7 +426,17 @@ function spScore(p,sid){if(!sid||sid==='gen')return 8;const s=p.sp[sid]||0;if(s=
 function spLabel(sc){if(sc===3)return{c:'sf',t:'⭐ 专项旗舰'};if(sc===2)return{c:'sm',t:'✦ 专项强校'};return null;}
 function langOK(p){if(!S.langType||S.langScore===null||S.langType==='none')return true;const req=p.lang[S.langType];if(req===null)return false;if(req===undefined)return true;return S.langScore>=req;}
 function langMsg(p){if(!S.langType||S.langScore===null||S.langType==='none')return null;const req=p.lang[S.langType];if(req===null)return'✗ '+S.langType.toUpperCase()+' 不被接受（仅TOEFL）';if(req===undefined)return null;if(S.langScore>=req)return'✓ '+S.langType.toUpperCase()+' '+fmtS(S.langScore,S.langType)+' 达线';return'✗ 需'+S.langType.toUpperCase()+' '+req+'（差'+(req-S.langScore).toFixed(1)+'）';}
-function computeResults(){const aR=S.regions.filter(r=>r!=='any');const tier=S.schoolTier||'t4';return P.map(p=>{let sc=0;if(p.g.includes(S.goal))sc+=24;if(S.goal==='bar'&&p.be&&!p.bd)sc+=10;if(p.cost<=S.budget*1.05)sc+=16;else if(p.cost<=S.budget*1.3)sc+=6;if(p.t.includes(tier))sc+=12;else if(tier==='t4'&&p.t.includes('t3'))sc+=5;if(aR.length===0||S.regions.includes('any')||p.reg.some(r=>aR.includes(r)))sc+=16;sc+=spScore(p,S.specialty);sc+=wkScore(p);sc+=indBonus(p);if(S.langType&&S.langScore!==null&&S.langType!=='none'){if(langOK(p))sc+=8;else sc-=20;}return{...p,score:sc};}).sort((a,b)=>b.score-a.score).filter(p=>p.score>0).slice(0,6);}
+function moeBonus(){
+  // 教育部评级加权：A+/A=+6, A-=+3, B+=0, B及以下=-3
+  const sch=SCHOOLS.find(s=>s.id===S.schoolId);
+  if(!sch)return 0;
+  const m=sch.moe;
+  if(m==='A+'||m==='A')return 6;
+  if(m==='A-')return 3;
+  if(m==='B+'||m==='B')return 0;
+  return -3;
+}
+function computeResults(){const aR=S.regions.filter(r=>r!=='any');const tier=S.schoolTier||'t4';return P.map(p=>{let sc=0;if(p.g.includes(S.goal))sc+=24;if(S.goal==='bar'&&p.be&&!p.bd)sc+=10;if(p.cost<=S.budget*1.05)sc+=16;else if(p.cost<=S.budget*1.3)sc+=6;if(p.t.includes(tier))sc+=12;else if(tier==='t4'&&p.t.includes('t3'))sc+=5;if(aR.length===0||S.regions.includes('any')||p.reg.some(r=>aR.includes(r)))sc+=16;sc+=spScore(p,S.specialty);sc+=wkScore(p);sc+=indBonus(p);sc+=moeBonus();if(S.langType&&S.langScore!==null&&S.langType!=='none'){if(langOK(p))sc+=8;else sc-=20;}return{...p,score:sc};}).sort((a,b)=>b.score-a.score).filter(p=>p.score>0).slice(0,6);}
 
 /* ── HELPERS ── */
 function rL(v){if(v<=15)return'≤15万/年';if(v<=20)return'约20万/年';if(v<=25)return'约25万/年';if(v<=30)return'约30万/年';if(v<=35)return'约35万/年';if(v<=40)return'约40万/年';if(v<=50)return'约50万/年';if(v<=60)return'约60万/年';if(v<=70)return'约70万/年';if(v<=80)return'约80万/年';if(v<=100)return'约100万/年';return'120万+/年';}
@@ -456,7 +481,8 @@ function render(){
     h+=`<div class="step-num fade">Goal · 目标方向</div><div class="step-q fade d1">你最希望通过LLM <em>实现什么</em>？</div><div class="step-hint fade d1">答案决定推荐项目、地区和策略。</div><div class="options fade d1">${goals.map(g=>`<button class="opt${S.goal===g.id?' sel':''}" onclick="pick('goal','${g.id}')"><span class="opt-icon">${g.icon}</span><span class="opt-text"><span class="opt-main">${g.main}</span><span class="opt-sub">${g.sub}</span></span></button>`).join('')}</div><div class="nav fade d2"><button class="btn-next" ${!S.goal?'disabled':''} onclick="nx()">继续 →</button></div>`;
   }else if(S.step===1){
     const fl=SCHOOLS.filter(s=>S.ss===''||s.n.includes(S.ss)||s.e.toLowerCase().includes(S.ss.toLowerCase()));
-    h+=`<div class="step-num fade">Background · 就读院校</div><div class="step-q fade d1">你在哪所大学读的 <em>法学本科</em>？</div><div class="step-hint fade d1">按软科2025排名。</div><input class="school-search fade" placeholder="搜索中文名或英文缩写…" value="${S.ss}" oninput="sS(this.value)"><div class="school-grid fade d1">${fl.map(s=>`<button class="school-pill${S.schoolId===s.id?' sel':''}" onclick="pSch('${s.id}','${s.t}')">${s.r<99?'#'+s.r+' ':''}${s.n}<span class="school-tier-label">${s.e} · ${TL[s.t]}</span></button>`).join('')}</div><div class="nav fade d2"><button class="btn-back" onclick="bk()">${bkSVG} 上一步</button><button class="btn-next" ${!S.schoolId?'disabled':''} onclick="nx()">继续 →</button></div>`;
+    const moeBadge=m=>{const map={'A+':'#1a1916','A':'#4a3e2e','A-':'#7c6f5a','B+':'#9a8870','B':'#b8b0a0','B及以下':'#c8c4bc'};return`<span style="display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:${map[m]||'#c8c4bc'};color:#fff;margin-left:3px;vertical-align:middle">${m}</span>`;};
+    h+=`<div class="step-num fade">Background · 就读院校</div><div class="step-q fade d1">你在哪所大学读的 <em>法学本科</em>？</div><div class="step-hint fade d1">教育部第四轮法学学科评估（最权威官方口径）。深色徽章=评级越高，影响匹配权重。</div><input class="school-search fade" placeholder="搜索中文名或英文缩写…" value="${S.ss}" oninput="sS(this.value)"><div class="school-grid fade d1">${fl.map(s=>`<button class="school-pill${S.schoolId===s.id?' sel':''}" onclick="pSch('${s.id}','${s.t}')">${s.r<99?'#'+s.r+' ':''}${s.n}${moeBadge(s.moe)}<span class="school-tier-label">${s.e} · 教育部 ${s.moe}</span></button>`).join('')}</div><div class="nav fade d2"><button class="btn-back" onclick="bk()">${bkSVG} 上一步</button><button class="btn-next" ${!S.schoolId?'disabled':''} onclick="nx()">继续 →</button></div>`;
   }else if(S.step===2){
     h+=`<div class="step-num fade">Budget · 年度总预算</div><div class="step-q fade d1">你的 <em>年度总预算</em>？</div><div class="step-hint fade d1">学费 + 生活费合计（人民币）。</div><div class="slider-wrap fade d1"><div class="budget-val" id="bv">${rL(S.budget)}</div><div class="budget-usd" id="bu">${rU(S.budget)}</div><input type="range" class="custom" id="bs" min="15" max="120" step="5" value="${S.budget}" style="--pct:${rP(S.budget)}%" oninput="upB(this.value)"><div class="slider-labels"><span>15万/年</span><span>120万+/年</span></div></div><div class="nav fade d2"><button class="btn-back" onclick="bk()">${bkSVG} 上一步</button><button class="btn-next" onclick="nx()">继续 →</button></div>`;
   }else if(S.step===3){
@@ -484,7 +510,9 @@ function render(){
     if(res.length===0){
       h+=`<div class="fade"><div class="step-num">匹配结果</div><div class="step-q">暂无完全匹配</div><div class="step-hint">请调整筛选条件，例如放宽预算或地区范围。</div>${ecH()}</div><div class="nav fade"><button class="btn-back" onclick="rs()">${bkSVG} 重新开始</button></div>`;
     }else{
-      h+=`<div class="fade"><div class="step-num">匹配结果 · Your Matches</div><div class="step-q" style="margin-bottom:5px">你的最佳 <em>LLM 项目</em></div><div class="results-meta">院校：<strong>${sch?sch.n:''}</strong>（${sch?TL[sch.t]:''}）· 方向：${spTxt} · 工作：${wkTxt}</div>${ecH()}</div>`;
+      const moeBg=m=>({'A+':'#1a1916','A':'#4a3e2e','A-':'#7c6f5a','B+':'#9a8870','B':'#b8b0a0','B及以下':'#c8c4bc'}[m]||'#c8c4bc');
+      const moeLbl=sch?`<span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:${moeBg(sch.moe)};color:#fff;margin-left:5px;vertical-align:middle">教育部 ${sch.moe}</span>`:'';
+      h+=`<div class="fade"><div class="step-num">匹配结果 · Your Matches</div><div class="step-q" style="margin-bottom:5px">你的最佳 <em>LLM 项目</em></div><div class="results-meta">院校：<strong>${sch?sch.n:''}</strong>${moeLbl} · 方向：${spTxt} · 工作：${wkTxt}</div>${ecH()}</div>`;
       res.forEach((p,i)=>{
         const lm=langMsg(p);const lc=lm?(lm.startsWith('✓')?'info':'warn'):null;
         const spSc=S.specialty?p.sp[S.specialty]||0:0;const sl=spLabel(spSc);
