@@ -207,7 +207,7 @@ function getUserProfile() {
   return [
     sch ? sch.n + '(' + TL[sch.t] + ')' : '—',
     sp ? sp.l : '—',
-    S.workStatus === 'fresh' ? '应届' : (S.workYears || '?') + '年·' + (inds.find(i=>i.id===S.workIndustry)?.l||'—'),
+    S.workStatus === 'fresh' ? '应届' : (S.workYears||'?')+'年·'+(S.workRoles.map(r=>roles.find(x=>x.id===r)?.l).filter(Boolean).join('/')||'—')+(S.workIndustries.length?'·'+S.workIndustries.map(i=>industries.find(x=>x.id===i)?.l).filter(Boolean).join('/'):''),
     S.langType ? (S.langType === 'none' ? '未考' : S.langType.toUpperCase() + ' ' + (S.langScore || '?')) : '—'
   ].join(' · ');
 }
@@ -323,7 +323,7 @@ const SCHOOLS=[
 const TL={t1:'第一档 T1',t2:'第二档 T2',t3:'第三档 T3',t4:'第四档 T4'};
 const STEPS=7;
 const S={step:0,goal:null,schoolId:null,schoolTier:null,budget:50,regions:[],specialty:null,
-  workStatus:null,workYears:null,workIndustry:null,
+  workStatus:null,workYears:null,workRoles:[],workIndustries:[],
   langType:null,langScore:null,ss:'',
   thumbs:{},flagOpen:{},flagSent:{},flagText:{},fpTab:'overall',fpStars:0,fpHover:0,fpText:'',fpSent:false};
 
@@ -351,11 +351,23 @@ const specs=[
   {id:'fin',l:'金融监管',e:'Financial Regulation',n:false},{id:'comp',l:'竞争/反垄断',e:'Competition Law',n:false},
   {id:'gen',l:'综合/未定',e:'General',n:false},
 ];
-const inds=[
-  {id:'law_firm',l:'律所',e:'Law Firm'},{id:'inhouse_co',l:'企业法务',e:'In-House Legal'},
-  {id:'govt',l:'政府/司法',e:'Government'},{id:'finance',l:'金融/投行',e:'Finance/Banking'},
-  {id:'tech',l:'科技/互联网',e:'Technology'},{id:'consulting',l:'咨询/会计',e:'Consulting'},
-  {id:'academia',l:'学术/科研',e:'Academia'},{id:'other',l:'其他行业',e:'Other'},
+// 职能（多选）
+const roles=[
+  {id:'law_firm',l:'律所律师',e:'Law Firm'},
+  {id:'inhouse',l:'企业法务',e:'In-House Legal'},
+  {id:'govt',l:'政府/司法',e:'Government'},
+  {id:'academia',l:'学术科研',e:'Academia'},
+  {id:'other_role',l:'其他',e:'Other'},
+];
+// 行业（多选）
+const industries=[
+  {id:'tech',l:'科技/互联网',e:'Tech & Internet'},
+  {id:'finance',l:'金融/投行',e:'Finance & Banking'},
+  {id:'consumer',l:'消费/零售',e:'Consumer & Retail'},
+  {id:'energy',l:'能源/制造',e:'Energy & Manufacturing'},
+  {id:'healthcare',l:'医疗/生命科学',e:'Healthcare & Life Sci'},
+  {id:'consulting',l:'咨询/会计',e:'Consulting & Accounting'},
+  {id:'other_ind',l:'其他行业',e:'Other Industry'},
 ];
 const SPEC_HINTS={
   corp:['Columbia（#1公司法）','NYU','Penn+沃顿','LSE','HKU'],ip:['Stanford','Duke','Berkeley','UCLA','King\'s（UK）'],
@@ -407,21 +419,58 @@ const P=[
 
 /* ── WORK INSIGHT ── */
 function getWorkInsight(){
-  if(S.workStatus!=='working'||!S.workYears||!S.workIndustry)return[];
-  const yr=parseInt(S.workYears)||0;const ind=S.workIndustry;const tips=[];
-  if(ind==='finance'||ind==='consulting')tips.push({n:'金融/咨询背景大加分',s:['Penn（沃顿Certificate）','LSE（金融监管）','Columbia（公司法）']});
-  if(ind==='law_firm'){if(yr>=2)tips.push({n:'2年+律所经验：顶级项目竞争力大幅提升',s:['Harvard','U Chicago','Stanford','Michigan']});else tips.push({n:'1年律所经验：T6竞争力仍强',s:['Columbia','NYU','Georgetown']});}
-  if(ind==='tech')tips.push({n:'科技行业背景极受欢迎',s:['Cornell Tech（科技首选）','Stanford','Berkeley（AI/Tech）']});
-  if(ind==='govt')tips.push({n:'政府/司法背景：政策导向学校加分',s:['Georgetown（DC政策#1）','NYU（国际法/公益）','ANU（公法/外交）']});
-  if(ind==='inhouse_co')tips.push({n:'企业法务经验受商法学校青睐',s:['Penn（商法+沃顿）','Columbia（公司法）','Melbourne']});
-  if(ind==='academia')tips.push({n:'学术背景：研究型项目优势显著',s:['Oxford','Cambridge','Harvard（学术申请）']});
+  if(S.workStatus!=='working'||!S.workYears)return[];
+  const yr=parseInt(S.workYears)||0;
+  const ro=S.workRoles;const ind=S.workIndustries;const tips=[];
+  const hasRole=id=>ro.includes(id);const hasInd=id=>ind.includes(id);
+  // 律所 + 科技/金融 → Stanford/顶校
+  if(hasRole('law_firm')&&hasInd('tech'))tips.push({n:'律所+科技背景：Stanford/Berkeley极受欢迎',s:['Stanford（偏好律所+科技）','Cornell Tech','Berkeley']});
+  if(hasRole('inhouse')&&hasInd('tech'))tips.push({n:'企业法务+科技：Stanford/Cornell Tech加分',s:['Stanford','Cornell Tech','Berkeley（Tech/AI）']});
+  if(hasRole('law_firm')&&yr>=2)tips.push({n:'2年+律所经验：顶级项目竞争力大幅提升',s:['Harvard','U Chicago','Stanford','Michigan']});
+  else if(hasRole('law_firm'))tips.push({n:'律所经验：T6竞争力强',s:['Columbia','NYU','Georgetown']});
+  if(hasInd('finance'))tips.push({n:'金融行业背景大加分',s:['Penn（沃顿Certificate）','LSE（金融监管）','Columbia（公司法）']});
+  if(hasRole('inhouse')&&hasInd('finance'))tips.push({n:'企业法务+金融：商法名校青睐',s:['Penn（商法+沃顿）','Columbia','LSE']});
+  if(hasRole('govt'))tips.push({n:'政府/司法背景：政策导向学校加分',s:['Georgetown（DC政策#1）','NYU（国际法/公益）','ANU（公法/外交）']});
+  if(hasRole('academia'))tips.push({n:'学术背景：研究型+Yale竞争力显著',s:['Yale','Oxford','Cambridge','Harvard（学术申请）']});
   if(yr>=4&&!tips.length)tips.push({n:S.workYears+'年经验显著提升顶级项目竞争力',s:['Harvard','U Chicago','Stanford','Michigan']});
   return tips;
 }
 
 /* ── SCORING ── */
 function wkScore(p){if(S.workStatus==='fresh')return 0;const yr=parseInt(S.workYears)||0;const pref=p.wp||0;if(pref===0)return 0;if(pref===1)return yr>=1?4:0;if(pref===2)return yr>=2?8:yr>=1?3:-4;if(pref===3)return yr>=2?12:yr>=1?2:-8;return 0;}
-function indBonus(p){if(!S.workIndustry||S.workStatus==='fresh')return 0;const ind=S.workIndustry;let b=0;if(ind==='finance'&&(p.sp.corp>=2||p.sp.fin>=2))b+=4;if(ind==='tech'&&(p.sp.tech>=2||p.sp.ai>=2||p.sp.data>=2))b+=4;if(ind==='law_firm')b+=2;if(ind==='govt'&&p.name.includes('Georgetown'))b+=5;if(ind==='govt'&&p.name.includes('ANU'))b+=4;return b;}
+function indBonus(p){
+  if(S.workStatus==='fresh')return 0;
+  const ro=S.workRoles;const ind=S.workIndustries;let b=0;
+  const hasRole=id=>ro.includes(id);const hasInd=id=>ind.includes(id);
+  // 行业+学校专项契合
+  if(hasInd('finance')&&(p.sp.corp>=2||p.sp.fin>=2))b+=5;
+  if(hasInd('tech')&&(p.sp.tech>=2||p.sp.ai>=2||p.sp.data>=2))b+=5;
+  if(hasInd('consulting')&&(p.sp.corp>=2||p.sp.fin>=2))b+=3;
+  // 职能加分
+  if(hasRole('law_firm'))b+=3;
+  if(hasRole('govt')&&p.name.includes('Georgetown'))b+=6;
+  if(hasRole('govt')&&p.name.includes('ANU'))b+=5;
+  if(hasRole('govt')&&p.name.includes('NYU'))b+=3;
+  // 复合背景组合加分
+  if(hasRole('law_firm')&&hasInd('tech')){
+    if(p.name.includes('Stanford'))b+=8;
+    if(p.name.includes('Cornell Tech')||p.name.includes('Berkeley'))b+=6;
+  }
+  if(hasRole('inhouse')&&hasInd('tech')){
+    if(p.name.includes('Stanford'))b+=7;
+    if(p.name.includes('Cornell Tech')||p.name.includes('Berkeley'))b+=5;
+  }
+  if((hasRole('law_firm')||hasRole('inhouse'))&&hasInd('finance')){
+    if(p.name.includes('Penn')||p.name.includes('Columbia'))b+=5;
+    if(p.name.includes('LSE'))b+=4;
+  }
+  // 学术背景 → Yale加分
+  if(hasRole('academia')){
+    if(p.name.includes('Yale'))b+=10;
+    if(p.name.includes('Oxford')||p.name.includes('Cambridge')||p.name.includes('Harvard'))b+=5;
+  }
+  return b;
+}
 function spScore(p,sid){if(!sid||sid==='gen')return 8;const s=p.sp[sid]||0;if(s===3)return 20;if(s===2)return 12;if(s===1)return 5;return -8;}
 function spLabel(sc){if(sc===3)return{c:'sf',t:'⭐ 专项旗舰'};if(sc===2)return{c:'sm',t:'✦ 专项强校'};return null;}
 function langOK(p){if(!S.langType||S.langScore===null||S.langType==='none')return true;const req=p.lang[S.langType];if(req===null)return false;if(req===undefined)return true;return S.langScore>=req;}
@@ -446,7 +495,7 @@ function lCfg(){if(S.langType==='toefl')return{min:60,max:120,step:1,label:'TOEF
 function dLS(t){return t==='toefl'?100:7.0;}
 function fmtS(v,t){return t==='ielts'?parseFloat(v).toFixed(1):Math.round(v);}
 function sPct(v,t){return t==='toefl'?Math.round((v-60)/60*100):Math.round((v-4)/5*100);}
-function wkSum(){if(!S.workStatus)return'—';if(S.workStatus==='fresh')return'应届';const y=S.workYears||'?';const ind=inds.find(i=>i.id===S.workIndustry)?.l||'';return y+'年·'+ind;}
+function wkSum(){if(!S.workStatus)return'—';if(S.workStatus==='fresh')return'应届';const y=S.workYears||'?';const rStr=S.workRoles.map(r=>roles.find(x=>x.id===r)?.l).filter(Boolean).join('/');const iStr=S.workIndustries.map(i=>industries.find(x=>x.id===i)?.l).filter(Boolean).join('/');return y+'年'+(rStr?'·'+rStr:'')+(iStr?'·'+iStr:'');}
 function stSum(i){const sch=SCHOOLS.find(s=>s.id===S.schoolId);return[S.goal?goals.find(g=>g.id===S.goal)?.main.slice(0,14):'—',sch?sch.n+'('+sch.e+')'  :'—',rL(S.budget),S.regions.length?S.regions.map(r=>regionOpts.find(o=>o.id===r)?.l.split(' ')[0]).join(' '):'—',specs.find(s=>s.id===S.specialty)?.l||'—',wkSum(),S.langType?(S.langType==='none'?'未考试':S.langType.toUpperCase()+' '+(S.langScore||'?')):'—'][i]||'—';}
 function bcH(){if(S.step===0)return'';let h='<div class="bc fade">';for(let i=0;i<STEPS;i++){const d=i<S.step,cu=i===S.step;const col=d?'#7c6f5a':cu?'#1a1916':'#c8c4bc';const fw=cu?'500':'400';const oc=d?'onclick="jTo('+i+')"':'';h+=`<button ${oc} style="background:none;border:none;font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:${col};font-weight:${fw};cursor:${d?'pointer':'default'};padding:2px 4px;border-radius:3px;">${d?stSum(i).slice(0,12):stepLabels[i]}</button>`;if(i<STEPS-1)h+=`<span style="font-size:9px;color:#c8c4bc;padding:0 1px">›</span>`;}return h+'</div>';}
 function ecH(){return'<div class="edit-row fade">'+stepLabels.map((l,i)=>`<button class="edit-chip" onclick="jTo(${i})"><span class="edit-chip-dot"></span>${stSum(i).slice(0,14)}</button>`).join('')+'</div>';}
@@ -495,10 +544,14 @@ function render(){
   }else if(S.step===5){
     const wi=getWorkInsight();
     h+=`<div class="step-num fade">工作经历 · Work Experience</div><div class="step-q fade d1">你目前的 <em>工作状态</em>？</div><div class="step-hint fade d1">部分学校明显偏好有工作经验的申请者，影响匹配结果。</div><div class="wcard fade d1"><div class="wsec"><span class="wlbl">工作状态</span><div class="opt-grid" style="margin-bottom:0"><button class="opt-pill${S.workStatus==='fresh'?' sel':''}" onclick="pW('workStatus','fresh')">🎓 应届生<span class="opt-pill-en">Fresh Graduate</span></button><button class="opt-pill${S.workStatus==='working'?' sel':''}" onclick="pW('workStatus','working')">💼 已有工作经验<span class="opt-pill-en">Have Work Experience</span></button></div></div>`;
-    if(S.workStatus==='working'){h+=`<div class="wsec" style="margin-top:12px"><span class="wlbl">工作年限</span><div class="yrs-grid">${['1','2-3','4-5','6+'].map(y=>`<button class="yr-pill${S.workYears===y?' sel':''}" onclick="pW('workYears','${y}')">${y}年</button>`).join('')}</div></div><div class="wsec" style="margin-top:12px"><span class="wlbl">所在行业</span><div class="ind-grid">${inds.map(ind=>`<button class="ind-pill${S.workIndustry===ind.id?' sel':''}" onclick="pW('workIndustry','${ind.id}')">${ind.l}<br><span style="font-size:9px;color:#b8b0a0">${ind.e}</span></button>`).join('')}</div></div>`;}
+    if(S.workStatus==='working'){
+      h+=`<div class="wsec" style="margin-top:12px"><span class="wlbl">总工作年限</span><div class="yrs-grid">${['1','2-3','4-5','6+'].map(y=>`<button class="yr-pill${S.workYears===y?' sel':''}" onclick="pW('workYears','${y}')">${y}年</button>`).join('')}</div></div>`;
+      h+=`<div class="wsec" style="margin-top:12px"><span class="wlbl">职能经历 <span style="font-weight:400;color:#b8b0a0">（可多选）</span></span><div class="ind-grid">${roles.map(r=>`<button class="ind-pill${S.workRoles.includes(r.id)?' sel':''}" onclick="pW('workRoles','${r.id}')">${r.l}<br><span style="font-size:9px;color:#b8b0a0">${r.e}</span></button>`).join('')}</div></div>`;
+      h+=`<div class="wsec" style="margin-top:12px"><span class="wlbl">所在行业 <span style="font-weight:400;color:#b8b0a0">（可多选）</span></span><div class="ind-grid">${industries.map(ind=>`<button class="ind-pill${S.workIndustries.includes(ind.id)?' sel':''}" onclick="pW('workIndustries','${ind.id}')">${ind.l}<br><span style="font-size:9px;color:#b8b0a0">${ind.e}</span></button>`).join('')}</div></div>`;
+    }
     h+=`</div>`;
     if(wi.length){h+=`<div class="work-insight fade d2">`;wi.forEach(tip=>{h+=`<div class="wi-title">🎯 ${tip.n}</div><div style="margin-bottom:7px">${tip.s.map(s=>`<span class="ws-tag">${s}</span>`).join('')}</div>`;});h+=`</div>`;}
-    const ok=S.workStatus==='fresh'||(S.workStatus==='working'&&S.workYears&&S.workIndustry);
+    const ok=S.workStatus==='fresh'||(S.workStatus==='working'&&S.workYears&&S.workRoles.length>0);
     h+=`<div class="nav fade d2"><button class="btn-back" onclick="bk()">${bkSVG} 上一步</button><button class="btn-next" ${!ok?'disabled':''} onclick="nx()">继续 →</button></div>`;
   }else if(S.step===6){
     const cfg=S.langType&&S.langType!=='none'?lCfg():null;const cur=S.langScore;
@@ -527,7 +580,16 @@ function render(){
 
 /* ── ACTIONS ── */
 function pick(k,v){S[k]=v;render();}
-function pW(k,v){S[k]=v;if(k==='workStatus'&&v==='fresh'){S.workYears=null;S.workIndustry=null;}render();}
+function pW(k,v){
+  if(k==='workRoles'||k==='workIndustries'){
+    const arr=S[k];const i=arr.indexOf(v);
+    if(i>-1)arr.splice(i,1);else arr.push(v);
+    render();return;
+  }
+  S[k]=v;
+  if(k==='workStatus'&&v==='fresh'){S.workYears=null;S.workRoles=[];S.workIndustries=[];}
+  render();
+}
 function pSch(id,t){S.schoolId=id;S.schoolTier=t;render();}
 function sS(v){S.ss=v;render();}
 function togR(id){if(id==='any'){S.regions=['any'];render();return;}S.regions=S.regions.filter(r=>r!=='any');const i=S.regions.indexOf(id);if(i>-1)S.regions.splice(i,1);else S.regions.push(id);render();}
@@ -538,7 +600,7 @@ function nx(){S.step=Math.min(S.step+1,STEPS);render();}
 function bk(){S.step=Math.max(0,S.step-1);render();}
 function jTo(i){S.step=i;render();}
 function sR(){S.step=STEPS;render();}
-function rs(){S.step=0;S.goal=null;S.schoolId=null;S.schoolTier=null;S.budget=50;S.regions=[];S.specialty=null;S.workStatus=null;S.workYears=null;S.workIndustry=null;S.langType=null;S.langScore=null;S.ss='';S.thumbs={};S.flagOpen={};S.flagSent={};S.flagText={};S.fpTab='overall';S.fpStars=0;S.fpHover=0;S.fpText='';S.fpSent=false;render();}
+function rs(){S.step=0;S.goal=null;S.schoolId=null;S.schoolTier=null;S.budget=50;S.regions=[];S.specialty=null;S.workStatus=null;S.workYears=null;S.workRoles=[];S.workIndustries=[];S.langType=null;S.langScore=null;S.ss='';S.thumbs={};S.flagOpen={};S.flagSent={};S.flagText={};S.fpTab='overall';S.fpStars=0;S.fpHover=0;S.fpText='';S.fpSent=false;render();}
 
 function setTh(id,v,name){
   S.thumbs[id]=v;
